@@ -97,6 +97,8 @@
 	  3. Add Air Time Management HAL
 	What is new for 2.4.0
 	  1. Add data structure and HAL for mesh
+	What is new for 2.5.0
+	  1. Add the Channel switch HAL for mesh
 **********************************************************************/
 /**
 * @file wifi_hal.h
@@ -184,9 +186,9 @@
 #define AP_INDEX_16 16
 #endif
 
-//defines for HAL version 2.3.0
+//defines for HAL version 2.5.0
 #define WIFI_HAL_MAJOR_VERSION 2   // This is the major verion of this HAL.
-#define WIFI_HAL_MINOR_VERSION 3   // This is the minor verson of the HAL.
+#define WIFI_HAL_MINOR_VERSION 5   // This is the minor verson of the HAL.
 #define WIFI_HAL_MAINTENANCE_VERSION 0   // This is the maintenance version of the HAL.
 
 /**********************************************************************
@@ -1858,6 +1860,8 @@ INT wifi_getRadioDcsChannelMetrics(INT radioIndex, wifi_channelMetrics_t *input_
 INT wifi_pushRadioChannel(INT radioIndex, UINT channel);
 //Dynamic Channel Selection (phase 2) HAL END
 
+// This HAL is used to change the channel to destination channel, with destination bandwidth, csa_beacon_count is used to specify how long CSA need to be announced.
+INT wifi_pushRadioChannel2(INT radioIndex, UINT channel, UINT channel_width_MHz, UINT csa_beacon_count);
 
 /* wifi_getRadioDfsSupport() function */
 /**
@@ -2841,6 +2845,10 @@ INT wifi_getSSIDStatus(INT ssidIndex, CHAR *output_string); //Tr181
 //Device.WiFi.SSID.{i}.Name
 // Outputs a 32 byte or less string indicating the SSID name.  Sring buffer must be preallocated by the caller.
 INT wifi_getSSIDName(INT apIndex, CHAR *output_string);        
+
+// To read the run time ssid name
+INT wifi_getSSIDNameStatus(INT apIndex, CHAR *output_string);
+
 
 /* wifi_setSSIDName() function */
 /**
@@ -4400,7 +4408,7 @@ INT wifi_setApRadioIndex(INT apIndex, INT radioIndex);                // sets th
 * @description Get the ACL MAC list per AP.
 *
 * @param apIndex - Access Point index
-* @param macArray - Mac Array list, to be returned
+* @param macArray - Mac Array list, to be returned // in formate as "11:22:33:44:55:66\n11:22:33:44:55:67\n"
 * @param buf_size - Buffer size for the mac array list
 *
 * @return The status of the operation
@@ -4455,6 +4463,10 @@ INT wifi_addApAclDevice(INT apIndex, CHAR *DeviceMacAddress);         // adds th
 *
 */
 INT wifi_delApAclDevice(INT apIndex, CHAR *DeviceMacAddress);         // deletes the mac address from the filter list
+
+//To delete all ACL MAC
+INT wifi_delApAclDevices(INT apINdex);
+
 
 /* wifi_getApAclDeviceNum() function */
 /**
@@ -4515,6 +4527,10 @@ INT wifi_kickApAclAssociatedDevices(INT apIndex,BOOL enable);         // enable 
 *
 */
 INT wifi_setApMacAddressControlMode(INT apIndex, INT filterMode);     // sets the mac address filter control mode.  0 == filter disabled, 1 == filter as whitelist, 2 == filter as blacklist
+
+// To read the ACL mode
+INT wifi_getApMacAddressControlMode(INT apIndex, INT *output_filterMode);
+
 
 /* wifi_setApVlanEnable() function */
 /**
@@ -4704,6 +4720,10 @@ INT wifi_stopHostApd();                                             // stops hos
 //Device.WiFi.AccessPoint.{i}.	
 //Device.WiFi.AccessPoint.{i}.Enable
 INT wifi_setApEnable(INT apIndex, BOOL enable);                       // sets the AP enable status variable for the specified ap.
+
+//Daynamically enable /disable VAP
+INT wifi_pushApEnable(INT apIndex, BOOL Enable);
+
 
 /* wifi_getApEnable() function */
 /**
@@ -5988,6 +6008,24 @@ typedef INT ( * wifi_newApAssociatedDevice_callback)(INT apIndex, wifi_associate
 */
 //Callback registration function.
 void wifi_newApAssociatedDevice_callback_register(wifi_newApAssociatedDevice_callback callback_proc);
+
+// The radio stats switch in driver include Tx Stats, background channel scan, capacity stats, etc
+// Radio Stats should be disabled by default
+// If driver do not support those switch, or switch has enabled by default, please just fillup with stumb function
+INT wifi_getRadioStatsEnable(INT radioIndex, BOOL *output_enable);
+INT wifi_setRadioStatsEnable(INT radioIndex, BOOL enable);
+
+// This is where we attempt to transmit a deauth to all clients before moving to a new channel, in the event some client doesn't support/react to CSA. 
+// This makes that client scan and re-connect faster then if we were to do nothing.
+// This is an "automatic" kick-mac type of functionality, that happens during the CSA process.
+// What happens is that after all clients should have moved to the new channel, and just before the radio moves to the new channel, it will broadcast (or unicast all clients) a deauth packet.
+// This helps clients who don't understand or ignore CSA to quickly realize the ap is gone/moved channels, and to scan and reconnect quickly.
+INT wifi_setApCsaDeauth(INT apIndex, INT mode);  //mode(enum): none, ucast, bcast
+
+// When scanfilter is enabled in the driver, we configure two values: enable: yes/no, and filter_ssid: <string>.
+// When filter_ssid is blank (apIndex==-1), the configured SSID on that interface is used.  When it's not empty (apIndex==0 to 15), the filter will apply to whatever ssid is provided.
+INT wifi_setApScanFilter(INT apIndex, INT mode, CHAR *essid); //mode(enum): disabled, enabled, first; essid could be empty to get all matching ESSID
+
 
 //-----------------------------------------------------------------------------------------------
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService. 

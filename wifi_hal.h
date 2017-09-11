@@ -3216,6 +3216,82 @@ INT wifi_setBandSteeringApGroup(char *ApGroup);
 */
 INT wifi_getRadioBandUtilization (INT radioIndex, INT *output_percentage);
 
+/* wifi_getApAssociatedDevice() function */
+/**
+* @description Gets the ApAssociatedDevice list for client MAC addresses
+*
+* @param apIndex - Access Point index
+* @param output_buf - list for client MAC, to be returned
+* @param output_buf_size - buffer length
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @execution Synchronous
+* @sideeffect None
+*
+*
+*/
+INT wifi_getApAssociatedDevice(INT ap_index, CHAR *output_buf, INT output_buf_size);
+
+/* wifi_getApAssociatedDevice() function */
+/**
+* @description Gets the ApAssociatedDevice RSSI
+*
+* @param apIndex - Access Point index
+* @param MAC - Client MAC in upcase format
+* @param output_RSSI - RSSI is in dbm
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @execution Synchronous
+* @sideeffect None
+*
+*
+*/
+INT wifi_getApDeviceRSSI(INT ap_index, CHAR *MAC, INT *output_RSSI);
+
+/* wifi_getApAssociatedDevice() function */
+/**
+* @description Gets the ApAssociatedDevice Rx Rate
+*
+* @param apIndex - Access Point index
+* @param MAC - Client MAC in upcase format
+* @param output_RxMb - Rx Rate in Mb
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @execution Synchronous
+* @sideeffect None
+*
+*
+*/
+INT wifi_getApDeviceRxrate (INT ap_index, CHAR *MAC, INT *output_RxMb);
+
+/* wifi_getApAssociatedDevice() function */
+/**
+* @description Gets the ApAssociatedDevice Tx Rate
+*
+* @param apIndex - Access Point index
+* @param MAC - Client MAC in upcase format
+* @param output_TxMb - Tx Rate in Mb
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @execution Synchronous
+* @sideeffect None
+*
+*
+*/
+INT wifi_getApDeviceTxrate (INT ap_index, CHAR *MAC, INT *output_TxMb);
+
 /* wifi_getBandSteeringBandUtilizationThreshold() function */
 /**
 * @description To set and read the band steering BandUtilizationThreshold parameters. 

@@ -1839,6 +1839,50 @@ INT wifi_setRadioDcsDwelltime(INT radioIndex, INT millisecond);
 */
 INT wifi_getRadioDcsDwelltime(INT radioIndex, INT *output_millisecond);
 
+
+/* wifi_setRadioDcsScanning() function */
+/**
+* @description Enable/Disable selected wifi radio channel's DCS.
+* \n Device.WiFi.Radio.{i}.X_RDKCENTRAL_COM_DCSEnable
+*
+* @param radioIndex - Index of Wi-Fi radio channel
+* @param enable - Set the value of DCS Enable flag for the selected radio index
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @execution Synchronous
+* @sideeffect None
+*
+* @note This function must not suspend and must not invoke any blocking system
+* calls. It should probably just send a message to a driver event handler task.
+*
+*/
+INT wifi_setRadioDcsScanning(INT radioIndex, BOOL enable);                        //RDKB
+
+/* wifi_getRadioDcsScanning() function */
+/**
+* @description Get DCS of the selected wifi radio channel's enable/disable status.
+* \n Device.WiFi.Radio.{i}.X_RDKCENTRAL_COM_DCSEnable
+*
+* @param radioIndex - Index of Wi-Fi radio channel
+* @param output_bool - DCS Enable flag for the selected radio index, to be returned
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @execution Synchronous
+* @sideeffect None
+*
+* @note This function must not suspend and must not invoke any blocking system
+* calls. It should probably just send a message to a driver event handler task.
+*
+*/
+INT wifi_getRadioDcsScanning(INT radioIndex, BOOL *output_bool);          //RDKB
+
+
 //Device.WiFi.Radio.i.X_RDKCENTRAL-COM_DCSHighChannelUsageThreshold	integer	W
 
 /**

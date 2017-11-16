@@ -1997,6 +1997,14 @@ INT wifi_getRadioDfsEnable(INT radioIndex, BOOL *output_bool);		//RDKB
 */
 INT wifi_setRadioDfsEnable(INT radioIndex, BOOL enabled);			//RDKB				
 
+
+//This call back will be invoked when driver detect the radar noise. If there are multiple channels have the radar noise, channel_number could be like "120,124,128"
+typedef INT ( * wifi_radioRadarDetect_callback)(char *channel_number);
+
+//Callback registration function.
+void wifi_radioRadarDetect_callback_register(wifi_radioRadarDetect_callback callback_proc);
+
+
 /* wifi_getRadioAutoChannelRefreshPeriodSupported() function */
 /**
 * @description Check if the driver support the AutoChannelRefreshPeriod.

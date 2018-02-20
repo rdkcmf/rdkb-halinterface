@@ -392,6 +392,28 @@ typedef struct {
     ULONG                           NumberOfClients;
 } moca_associated_device_t;
 
+typedef struct _MoCAHalDeviceInfo {
+    char* ssidType;
+    char* AssociatedDevice;
+    char* deviceMac;
+    char* parentMac;
+    char* deviceType;
+
+    int RSSI;
+    int Status;
+    int Updated;
+    int StatusChange;
+
+    struct _MoCAHalDeviceInfo* next;
+
+} MoCAHalDeviceInfo;
+
+typedef struct _MoCAHalDeviceList
+{
+    int num_devices;
+    MoCAHalDeviceInfo* deviceList;
+} MoCAHalDeviceList;
+
 #ifndef MOCA_VAR
 typedef struct {
     /* This data structure represents teh MoCA mesh PHY rate table.
@@ -453,9 +475,13 @@ typedef struct {
     ULONG                           LeaseTime;
 } moca_flow_table_t;
 
-typedef INT ( * moca_associatedDevice_callback)(ULONG ifIndex, moca_associated_device_t *moca_dev); //This call back will be invoked when new MoCA client is Actived or Inactived.moca_associated_device_t.Active is used to indicate activation/inactivation
+typedef INT ( * moca_associatedDevice_callback)(ULONG ifIndex, MoCAHalDeviceInfo *moca_dev); //This call back will be invoked when new MoCA client is Actived or Inactived.moca_associated_device_t.Active is used to indicate activation/inactivation
 
 void moca_associatedDevice_callback_register(moca_associatedDevice_callback callback_proc); //Callback registration function.
+
+void moca_startAssocDevicesThread(void);
+
+void moca_sendMoCAListUpdate(BOOL defaultSend);
 
 /**********************************************************************************
  *

@@ -102,6 +102,10 @@
 #define INT   int
 #endif
 
+#ifndef UINT
+#define UINT unsigned int
+#endif
+
 #ifndef TRUE
 #define TRUE     1
 #endif
@@ -470,6 +474,78 @@ typedef INT ( * CcspHalExtSw_ethAssociatedDevice_callback)(eth_device_t *eth_dev
 void CcspHalExtSw_ethAssociatedDevice_callback_register(CcspHalExtSw_ethAssociatedDevice_callback callback_proc); //Callback registration function.
 
 //<<
+
+/* CcspHalExtSw_getEthWanEnable() function */
+/**
+* @description Get EthernetWAN enable status
+*
+* @param pFlag - pointer to BOOLEAN to store current EthernetWAN enable value
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @sideeffect None
+*/
+INT
+CcspHalExtSw_getEthWanEnable
+  (
+    BOOLEAN * pFlag
+  );
+
+/* CcspHalExtSw_setEthWanEnable() function */
+/**
+* @description Enable/Disable EthernetWAN functionality
+*
+* @param Flag - EthernetWAN enable value
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @sideeffect None
+*/
+INT
+CcspHalExtSw_setEthWanEnable
+  (
+    BOOLEAN Flag
+  );
+
+/* CcspHalExtSw_getEthWanPort() function */
+/**
+* @description Get EthernetWAN port number value
+*
+* @param pPort - pointer to UINT value to store current setting
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @sideeffect None
+*/
+INT
+CcspHalExtSw_getEthWanPort
+  (
+    UINT * pPort
+  );
+
+/* CcspHalExtSw_setEthWanPort() function */
+/**
+* @description Set EthernetWAN interface/port number
+*
+* @param Port - UINT value to set the setting
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @sideeffect None
+*/
+INT
+CcspHalExtSw_setEthWanPort
+  (
+    UINT Port
+  );
 
 #endif /* __CCSP_HAL_ETHSW_H__ */
  

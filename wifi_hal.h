@@ -7144,6 +7144,12 @@ INT wifi_steering_clientDisconnect(
 //INT wifi_getRadioConnectionTimeOut(INT radioIndex, INT *output_timout_sec);
 //INT wifi_setRadioConnectionTimeOut(INT radioIndex, INT timout_sec);
 
+//This call back will be invoked when driver detect the client authentication fail.
+//event_type: 0=unknow reason; 1=wrong password; 2=timeout;
+typedef INT ( * wifi_apAuthEvent_callback)(INT apIndex, char *MAC, INT event_type);
+//Callback registration function.
+void wifi_apAuthEvent_callback_register(wifi_apAuthEvent_callback callback_proc);
+
 //-----------------------------------------------------------------------------------------------
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService. 
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.AccessNetworkType	

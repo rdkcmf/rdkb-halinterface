@@ -7132,11 +7132,13 @@ void wifi_apAuthEvent_callback_register(wifi_apAuthEvent_callback callback_proc)
 
 
 //Mode 1: If the time delay between when a client disconnect or disassociate message is received by an AP and a client connect or associate message is received by the AP within “rapid_reconnect_window” seconds then the WiFi HAL must invoke a rapid_reconnect call back API. RDKB will use this call back API to increment the rapid re-connect count for this client. (Provided that this was NOT caused by band steering or AP steering).
-#define RECONN_AFTER_INACTIVITY 1
+#define WIFI_STA_EVT_TYPE_RECONN_AFTER_INACTIVITY 1
 //Mode 2: If the AP status for a client is connected or associated and the AP receives a client connect or associate message from this client then the WiFi HAL must invoke a rapid_reconnect call back API. RDKB will use this call back event to increment the rapid re-connect count for this client. (Provided that this was NOT caused by band steering or AP steering).
-#define RECONN_AFTER_STA_LEFT 2
+#define WIFI_STA_EVT_TYPE_RECONN_AFTER_LEAVING 2
 //Mode 3: If the AP changes a client’s status to “disconnected” due to the AP’s client inactivity timeout and the client connects or associates with the same AP radio within “rapid_reconnect_window” minus “client_inactivity_timeout” seconds, then then the WiFi HAL must invoke a rapid_reconnect call back API. RDKB will use this call back API to increment the rapid re-connect count for this client. (Provided that this was NOT caused by band steering or AP steering).
-#define RECONN_DISCONNECT 3 // this is catchall. 3 will be passed if 1 and 2 aren't detected.
+#define WIFI_STA_EVT_TYPE_RECONNECTED    3 // This is catchall. 3 will be passed if 1 and 2 aren't detected.
+#define WIFI_STA_EVT_TYPE_CONNECTED      4 // When clients connect.
+#define WIFI_STA_EVT_TYPE_DISCONNECTED   5 // When clients get disconnected.
 
 // Rapid Reconnect Time Limit
 // Device.WiFi.Radio.i.X_RDKCENTRAL-COM_rapidReconnectMaxTime. Integer r/w (default 180 sec, range: 15 to 1200)

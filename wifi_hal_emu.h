@@ -4993,7 +4993,11 @@ BOOL checkLanInterface();
 //Passing inputs to hostapd configuration file
 INT CcspHal_change_config_value(char *field_name, char *field_value, char *buf, unsigned int *nbytes);
 
-
+//This call back will be invoked when driver detect the client authentication fail.
+//event_type: 0=unknow reason; 1=wrong password; 2=timeout;
+typedef INT ( * wifi_apAuthEvent_callback)(INT apIndex, char *MAC, INT event_type);
+//Callback registration function.
+void wifi_apAuthEvent_callback_register(wifi_apAuthEvent_callback callback_proc);
 
 
 

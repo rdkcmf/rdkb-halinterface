@@ -7131,29 +7131,22 @@ typedef INT ( * wifi_apAuthEvent_callback)(INT apIndex, char *MAC, INT event_typ
 void wifi_apAuthEvent_callback_register(wifi_apAuthEvent_callback callback_proc);
 
 
-//Mode 1: If the time delay between when a client disconnect or disassociate message is received by an AP and a client connect or associate message is received by the AP within “rapid_reconnect_window” seconds then the WiFi HAL must invoke a rapid_reconnect call back API. RDKB will use this call back API to increment the rapid re-connect count for this client. (Provided that this was NOT caused by band steering or AP steering).
-#define WIFI_STA_EVT_TYPE_RECONN_AFTER_INACTIVITY 1
-//Mode 2: If the AP status for a client is connected or associated and the AP receives a client connect or associate message from this client then the WiFi HAL must invoke a rapid_reconnect call back API. RDKB will use this call back event to increment the rapid re-connect count for this client. (Provided that this was NOT caused by band steering or AP steering).
-#define WIFI_STA_EVT_TYPE_RECONN_AFTER_LEAVING 2
-//Mode 3: If the AP changes a client’s status to “disconnected” due to the AP’s client inactivity timeout and the client connects or associates with the same AP radio within “rapid_reconnect_window” minus “client_inactivity_timeout” seconds, then then the WiFi HAL must invoke a rapid_reconnect call back API. RDKB will use this call back API to increment the rapid re-connect count for this client. (Provided that this was NOT caused by band steering or AP steering).
-#define WIFI_STA_EVT_TYPE_RECONNECTED    3 // This is catchall. 3 will be passed if 1 and 2 aren't detected.
-#define WIFI_STA_EVT_TYPE_CONNECTED      4 // When clients connect.
-#define WIFI_STA_EVT_TYPE_DISCONNECTED   5 // When clients get disconnected.
-
-// Rapid Reconnect Time Limit
-// Device.WiFi.Radio.i.X_RDKCENTRAL-COM_rapidReconnectMaxTime. Integer r/w (default 180 sec, range: 15 to 1200)
-INT wifi_getRadioRapidReconnectTimeLimit(INT radioIndex, INT *output_timout_sec);
-INT wifi_setRadioRapidReconnectTimeLimit(INT radioIndex, INT timout_sec);
+//Mode 1: When a client connect or associate message is received by the AP, then the WiFi HAL lay must invoke wifi_apAssociatedDevice_callback with event_type: CONN_NEW.
+#define CONN_NEW 1
+//Mode 2: If the AP status for a client is connected or associated and the AP receives a client connect or associate message from this client, wifi_apAssociatedDevice_callback need to be invoked from hal layer to notify RDKB with event_type: CONN_RENEW
+#define CONN_RENEW 2
+//Mode 3: If the AP changes a client’s status to “disconnected” due to the AP’s client inactivity timeout (RDKB could read this timeout from wifi_getRadioClientInactivityTimout ) and then the client re-connects or associates back to same AP , then the WiFi HAL layer must invoke a wifi_apAssociatedDevice_callback with event_type: CONN_RECONN_AFTER_INACTIVITY
+#define CONN_RECONN_AFTER_INACTIVITY 3
 
 //Device.WiFi.Radio.i.X_RDKCENTRAL-COM_clientInactivityTimout. Integer ro
+//This is used to read the ClientInactivityTimout from driver.
 INT wifi_getRadioClientInactivityTimout(INT radioIndex, INT *output_timout_sec);
 
-//This call back will be invoked when driver detect the client disconnection or disassociation happen.
-typedef INT ( * wifi_apDisassociatedDevice_callback)(INT apIndex, char *MAC, INT event_type);
+//This call back will be invoked when driver detect the client connection or association happen.
+typedef INT ( * wifi_apAssociatedDevice_callback)(INT apIndex, char *MAC, INT event_type);
 
 //Callback registration function.
-void wifi_apDisassociatedDevice_callback_register(wifi_apDisassociatedDevice_callback callback_proc);
-
+void wifi_apAssociatedDevice_callback_register(wifi_apAssociatedDevice_callback callback_proc);
 
 
 //-----------------------------------------------------------------------------------------------

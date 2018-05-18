@@ -7170,15 +7170,39 @@ void wifi_apAssociatedDevice_callback_register(wifi_apAssociatedDevice_callback 
 
 
 //-----------------------------------------------------------------------------------------------
-//Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService. 
-//Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.AccessNetworkType	
+//Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_InterworkingServiceCapability
+//Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_InterworkingServiceEnable
+//Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_InterworkingElement.AccessNetworkType
 //Access Network Type value to be included in the Interworking IE in the beaconds. (refer 8.4.2.94 of IEEE Std 802.11-2012). Possible values are: 0 - Private network;1 - Private network with guest access;2 - Chargeable public network;3 - Free public network;4 - Personal device network;5 - Emergency services only network;6-13 - Reserved;14 - Test or experimental;15 - Wildcard
 //INT wifi_setAccessNetworkType(INT apIndex, INT accessNetworkType);   // P3
+//Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_InterworkingElement.Internet	
+//Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_InterworkingElement.ASRA
+//Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_InterworkingElement.ESR
+//Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_InterworkingElement.UESA
+//Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_InterworkingElement.VenueOptionPresent
+//Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_InterworkingElement.VenueGroup
+//Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_InterworkingElement.VenueType
+//Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_InterworkingElement.HESSOptionPresent
+//Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_InterworkingElement.HESSID	
 
-//Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.Internet	
-//Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.VenueGroupCode	
-//Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.VenueTypeCode	
-//Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.HESSID	
+// Interworking Element structure; see 802.11-2016 section 9.4.2.92 for field definition.
+typedef struct {
+	BOOL					interworkingEnabled;
+	UINT 					accessNetworkType;
+    BOOL 					internetAvailable;
+    BOOL 					asra;
+    BOOL 					esr;
+    BOOL 					uesa;
+    BOOL 					venueOptionPresent;    // True when venue information has not been provided, e.g. the hostspot is in a residence.
+	UCHAR					venueGroup;
+    UCHAR 					venueType;
+	BOOL					hessOptionPresent;
+    char 					hessid[18];    // Optional; use empty string to indicate no value provided.
+} wifi_InterworkingElement_t;
+
+INT	wifi_pushApInterworkingElement(INT apIndex, 
+								wifi_InterworkingElement_t	*infoEelement);
+
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.DGAFEnable	
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.ANQPDomainID
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.VenueNamesNumberOfEntries	

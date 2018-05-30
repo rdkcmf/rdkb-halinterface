@@ -394,6 +394,15 @@ typedef struct _wifi_channelStats {
 	ULLONG ch_utilization_busy_ext; //<! Time radio detected that extended channel was busy (40MHz extention channel busy
 } wifi_channelStats_t;					//<!This data structure is for each channel
 
+typedef struct _wifi_channelStats2 { 
+	UINT 	ch_Frequency; 					//<! Current primary channel centre frequency
+	INT 	ch_NoiseFloor; 					//<! Current noise floor on channel
+	INT 	ch_Non80211Noise; 				//<! Current non 802.11 noise on channel
+	INT 	ch_Max80211Rssi; 				//<! Max RSSI from the neighbor AP in dbm on this channel
+	UINT 	ch_ObssUtil; 					//<! Other bss utilization for last interval
+	UINT 	ch_SelfBssUtil; 				//<! Self bss utilization for last interval
+} wifi_channelStats2_t;
+
 //----------------ASSO. DEV-------------------------------------------
 //>> Deprecated: used for old RDKB code. 
 typedef struct _wifi_device
@@ -736,6 +745,8 @@ typedef struct _wifi_associated_dev_stats {
 */
 //Get the basic Radio channel traffic static info
 INT wifi_getRadioChannelStats(INT radioIndex, wifi_channelStats_t *input_output_channelStats_array, INT array_size);
+
+INT wifi_getRadioChannelStats2(INT radioIndex, wifi_channelStats2_t *outputChannelStats2);
 
 
 /* wifi_getApAssociatedDeviceRxStatsResult() function */

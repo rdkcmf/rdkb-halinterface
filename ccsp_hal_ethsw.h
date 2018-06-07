@@ -564,9 +564,11 @@ typedef struct __appCallBack
         fpEthWanLink_Down          pGWP_act_EthWanLinkDown;
 }appCallBack;
 
-
+#if defined(_PLATFORM_IPQ_)
+int GWP_RegisterEthWan_Callback(appCallBack *obj); // This function will get used to register RDKB functions to the callback pointers
+#else
 void GWP_RegisterEthWan_Callback(appCallBack *obj); // This function will get used to register RDKB functions to the callback pointers
-
+#endif
 INT GWP_GetEthWanLinkStatus(); /* Returns 1 if active, 0 for inactive */ // RDKB will call this
 
 

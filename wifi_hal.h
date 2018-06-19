@@ -7204,11 +7204,23 @@ INT wifi_steering_clientDisconnect(
 //INT wifi_getRadioConnectionTimeOut(INT radioIndex, INT *output_timout_sec);
 //INT wifi_setRadioConnectionTimeOut(INT radioIndex, INT timout_sec);
 
-//This call back will be invoked when driver detect the client authentication fail.
+//This call back will be invoked when driver detect the client "authentication fail".
 //event_type: 0=unknow reason; 1=wrong password; 2=timeout;
 typedef INT ( * wifi_apAuthEvent_callback)(INT apIndex, char *MAC, INT event_type);
 //Callback registration function.
 void wifi_apAuthEvent_callback_register(wifi_apAuthEvent_callback callback_proc);
+
+// The pulling function to retrieve the existing authenticated device Mac for specified VAP
+typedef struct _mac_t {
+	unsigned char byte[6];
+} mac_t;
+INT wifi_getApAuthenticatedDevices(INT apIndex, mac_t **mac_array, UINT *output_array_size);
+
+//The call back function to send the notification for new authenticated devices.
+typedef INT ( * wifi_apAuthenticatedEvent_callback)(INT apIndex, char *MAC);
+
+//Callback registration function.
+void wifi_apAuthenticatedEvent_callback_register(wifi_apAuthEvent_callback callback_proc);
 
 
 //Mode 1: When a client connect or associate message is received by the AP, then the WiFi HAL lay must invoke wifi_apAssociatedDevice_callback with event_type: CONN_NEW.

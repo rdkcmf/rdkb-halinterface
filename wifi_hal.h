@@ -194,6 +194,12 @@
                 STRUCTURE DEFINITIONS
 **********************************************************************/
 typedef unsigned char mac_address_t[6];
+typedef char   r1_key_holder_t[13];
+typedef char   nas_id_t[49];
+typedef unsigned char   r0r1_key_t[16];
+typedef char r0r1_key_str_t[33];
+typedef char            mac_addr_str_t[18];
+
 //>> Deprecated: used for old RDKB code. 
 typedef struct _wifi_basicTrafficStats
 {
@@ -7274,6 +7280,271 @@ typedef struct {
 
 INT	wifi_pushApInterworkingElement(INT apIndex, 
 								wifi_InterworkingElement_t	*infoEelement);
+
+// 802.11r Fast Trasition definitions.
+typedef struct {
+    mac_address_t   mac;
+    nas_id_t        nasId;
+    r0r1_key_t      key;
+} wifi_r0KH_t;
+
+typedef struct {
+    mac_address_t   mac;
+    mac_address_t   r1khId;
+    r0r1_key_t      key;
+} wifi_r1KH_t;
+
+typedef enum {
+	FT_SUPPORT_DISABLED,
+	FT_SUPPORT_FULL,
+	FT_SUPPORT_ADAPTIVE	
+} wifi_fastTrasitionSupport_t;
+
+#define MAX_KEY_HOLDERS		8
+typedef struct {
+	wifi_fastTrasitionSupport_t	support;
+    unsigned short          mobilityDomain;
+	BOOL					overDS;
+    nas_id_t                r0KeyHolder;
+    unsigned short          r0KeyLifeTime;
+    mac_address_t           r1KeyHolder;
+    unsigned short          reassocDeadLine;
+    BOOL                    pmkR1Push;
+    unsigned char           numR0KHs;
+    wifi_r0KH_t             r0KH[MAX_KEY_HOLDERS];
+    unsigned char           numR1KHs;
+    wifi_r1KH_t             r1KH[MAX_KEY_HOLDERS];
+} wifi_FastTransitionConfig_t;
+
+/* @description Set the Fast Transition capability to disabled, full FT
+ * support, or adaptive FT support.  Adaptive support is the same as full
+ * support except the Mobility Domain Element is not sent in Beacon Frames.
+ * 
+ * Receipt of the TR-181 Object for writing
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_FTTransitionActivated via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param activate - 0 = disabled, 1 = full FT support, 2 = adaptive support.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_setFastBSSTransitionActivated(INT apIndex, UCHAR activate);
+
+/* @description Get the Fast Transition capability value.  
+ * 
+ * Receipt of the TR-181 Object for reading
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_BSSTransitionActivated via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param activate - 0 = disabled, 1 = full FT support, 2 = adaptive support.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_getBSSTransitionActivated(INT apIndex, BOOL *activate);
+
+/* @description Get the Fast Transition over DS activated value.  
+ * See 802.11-2016 section 13.3.
+ * 
+ * Receipt of the TR-181 Object for reading
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_FTOverDSActivated via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param activate - True for activated (enabled), false for not activated
+ * (disabled).
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_getFTOverDSActivated(INT apIndex, BOOL *activate);
+
+/* @description Set the Fast Transition over DS activated value. 
+ * See 802.11-2016 section 13.3. 
+ * 
+ * Receipt of the TR-181 Object for writing
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_FTOverDSActivated via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param activate - True for activated (enabled), false for not activated
+ * (disabled).
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_setFTOverDSActivated(INT apIndex, BOOL *activate);
+
+/* @description Get the Fast Transition Mobility Domain value. 
+ * See 802.11-2016 section 13.3. 
+ * 
+ * Receipt of the TR-181 Object for reading
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_FTMobilityDomain via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param mobilityDomain - Value of the FT Mobility Domain for this AP.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_getFTMobilityDomainID(INT apIndex, UCHAR mobilityDomain[2]);
+
+/* @description Set the Fast Transition Mobility Domain value.  
+ * See 802.11-2016 section 13.3.
+ * 
+ * Receipt of the TR-181 Object for writing
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_FTMobilityDomain via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param mobilityDomain - Value of the FT Mobility Domain for this AP.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_setFTMobilityDomainID(INT apIndex, UCHAR mobilityDomain[2]);
+
+/* @description Get the Fast Transition Resource Request Support value. 
+ * See 802.11-2016 section 13.3. 
+ * 
+ * Receipt of the TR-181 Object for reading
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_FTResourceRequestSupported via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param supported - True is FT resource request supported, false is not
+ * supported.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_getFTResourceRequestSupported(INT apIndex, BOOL *supported);
+
+/* @description Set the Fast Transition Resource Request Support value.  
+ * See 802.11-2016 section 13.3.
+ * 
+ * Receipt of the TR-181 Object for writing
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_FTResourceRequestSupported via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param suppored - True is FT resource request supported, false is not
+ * supported.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_setFTResourceRequestSupported(INT apIndex, BOOL *supported);
+
+/* @description Get the Fast Transition R0 Key Lifetime value.  
+ * See 802.11-2016 section 13.4.2.
+ * 
+ * Receipt of the TR-181 Object for reading
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_FTR0KeyLifetime via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param lifetime - R0 Key Lifetime.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_getFTR0KeyLifetime(INT apIndex, UINT *lifetime);
+
+/* @description Set the Fast Transition R0 Key Lifetime value.  
+ * See 802.11-2016 section 13.4.2
+ * 
+ * Receipt of the TR-181 Object for writing
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_FTR0KeyLifetime via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param lifetime - R0 Key Lifetime.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_setFTR0KeyLifetime(INT apIndex, UINT *lifetime);
+
+/* @description Get the Fast Transition R0 Key Holder ID value.  
+ * See 802.11-2016 section 13.3.
+ * 
+ * Receipt of the TR-181 Object for reading
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_FTR0KeyHolderID via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param keyHolderID - R0 Key Holder ID string.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_getFTR0KeyHolderID(INT apIndex, UCHAR *keyHolderID);
+
+/* @description Set the Fast Transition R0 Key Holder ID value.  
+ * See 802.11-2016 section 13.3.
+ * 
+ * Receipt of the TR-181 Object for writing
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_FTR0KeyHolderID via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param keyHolderID - R0 Key Holder ID string.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_setFTR0KeyHolderID(INT apIndex, UCHAR *keyHolderID);
+
+/* @description Get the Fast Transition R1 Key Holder ID value.  
+ * See 802.11-2016 section 13.3.
+ * 
+ * Receipt of the TR-181 Object for reading
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_FTR1KeyHolderID via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param keyHolderID - R0 Key Holder ID string.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_getFTR1KeyHolderID(INT apIndex, UCHAR *keyHolderID);
+
+/* @description Set the Fast Transition R1 Key Holder ID value.  
+ * See 802.11-2016 section 13.3.
+ * 
+ * Receipt of the TR-181 Object for writing
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_FTR1KeyHolderID via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ * 
+ * @param apIndex - AP Index the setting applies to.
+ * @param keyHolderID - R0 Key Holder ID string.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_setFTR1KeyHolderID(INT apIndex, UCHAR *keyHolderID);
+
+INT wifi_pushApFastTransitionConfig(INT apIndex, wifi_FastTransitionConfig_t *ftData);
 
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.DGAFEnable	
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.ANQPDomainID

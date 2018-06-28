@@ -7274,8 +7274,41 @@ typedef struct {
 	UCHAR					venueGroup;
     UCHAR 					venueType;
 	BOOL					hessOptionPresent;
-    char 					hessid[18];    // Optional; use empty string to indicate no value provided.
+    mac_addr_str_t 			hessid;    // Optional; use empty string to indicate no value provided.
 } wifi_InterworkingElement_t;
+
+// @description Get the Interworking Service Capability of the AP
+// @param apIndex - Index of the Access Point.
+// @param output_bool - Indication as to whether the AP supports the Interworking Service.
+// @return The status of the operation.
+// @retval RETURN_OK if successful.
+// @retval RETURN_ERR if any error is detected.
+INT wifi_getApInterworkingServiceCapability(INT apIndex, BOOL *output_bool);
+
+// @description Get the Interworking Service enable/disable value for the AP.
+// @param apIndex - Index of the Access Point.
+// @param output_bool - Indication as to whether the AP Interworking Service is enabled (true) or disabled (false).
+// @return The status of the operation.
+// @retval RETURN_OK if successful.    
+// @retval RETURN_ERR if any error is detected.
+INT wifi_getApInterworkingServiceEnable(INT apIndex, BOOL *output_bool);
+
+// @description Set the Interworking Service enable/disable value for the AP.
+// @param apIndex - Index of the Access Point.
+// @param input_bool - Value to set the Interworking Service enable to, true or false.
+// @return The status of the operation.
+// @retval RETURN_OK if successful.
+// @retval RETURN_ERR if any error is detected.
+INT wifi_setApInterworkingServiceEnable(INT apIndex, BOOL input_bool);
+
+// @description Get the Interworking Element that will be sent by the AP.
+//
+// @param apIndex - Index of the Access Point.
+// @param output_struct - Interworking Element.
+// @return The status of the operation.
+// @retval RETURN_OK if successful.
+// @retval RETURN_ERR if any error is detected.
+INT wifi_getApInterworkingElement(INT apIndex, wifi_InterworkingElement_t *output_struct);
 
 INT	wifi_pushApInterworkingElement(INT apIndex, 
 								wifi_InterworkingElement_t	*infoEelement);

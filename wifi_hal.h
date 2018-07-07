@@ -6924,6 +6924,30 @@ typedef enum {
 } wifi_steering_rssiChange_t;
 
 /**
+ * @brief STA datarate information
+ * These are STA capabilities values
+ */
+typedef struct {
+    UINT                            maxChwidth;         /**< Max bandwidth supported                */
+    UINT                            maxStreams;         /**< Max spatial streams supported          */
+    UINT                            phyMode;            /**< PHY Mode supported                     */
+    UINT                            maxMCS;             /**< Max MCS  supported                     */
+    UINT                            maxTxpower;         /**< Max TX power supported                 */
+    UINT                            isStaticSmps;       /**< Operating in Static SM Power Save Mode */
+    UINT                            isMUMimoSupported;  /**< Supports MU-MIMO                       */
+} wifi_steering_datarateInfo_t;
+
+typedef struct {
+    BOOL                            linkMeas;           /**< Supports link measurement      */
+    BOOL                            neighRpt;           /**< Supports neighbor reports      */
+    BOOL                            bcnRptPassive;      /**< Supports Passive 11k scans     */
+    BOOL                            bcnRptActive;       /**< Supports Active 11k scans      */
+    BOOL                            bcnRptTable;        /**< Supports beacon report table   */
+    BOOL                            lciMeas;            /**< Supports LCI measurement       */
+    BOOL                            ftmRangeRpt;        /**< Supports FTM Range report      */
+} wifi_steering_rrmCaps_t;
+
+/**
  * @brief Probe Request Event Data
  * This data is provided with @b WIFI_STEERING_EVENT_PROBE_REQ
  */
@@ -6939,7 +6963,13 @@ typedef struct {
  * This data is provided with @b WIFI_STEERING_EVENT_CLIENT_CONNECT
  */
 typedef struct {
-    mac_address_t                   client_mac;     /**< Client MAC Address         */
+    mac_address_t                   client_mac;     /**< Client MAC Address                     */
+    UINT                            isBTMSupported; /**< Client supports BSS TM                 */
+    UINT                            isRRMSupported; /**< Client supports RRM                    */
+    BOOL                            bandCap2G;      /**< Client is 2.4GHz capable               */
+    BOOL                            bandCap5G;      /**< Client is 5GHz capable                 */
+    wifi_steering_datarateInfo_t    datarateInfo;   /**< Client supported datarate information  */
+    wifi_steering_rrmCaps_t         rrmCaps;        /**< Client supported RRM capabilites       */
 } wifi_steering_evConnect_t;
 
 /**

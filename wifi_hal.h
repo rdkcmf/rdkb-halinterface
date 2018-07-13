@@ -82,6 +82,10 @@
 	  1. Add HAL for Wifi telemetry
 	What is new for 2.8.0
 	  1. Add HAL for 11w
+    What is new for 2.9.0
+      1. Add HAL function definitions for 802.11r Fast Transition
+    What is new for 2.10.0
+      1. Add HAL function definitions for 802.11v BSS Transition Management
 **********************************************************************/
 /**
 * @file wifi_hal.h
@@ -185,9 +189,9 @@
 #define AP_INDEX_16 16
 #endif
 
-//defines for HAL version 2.6.0
+//defines for HAL version 2.10.0
 #define WIFI_HAL_MAJOR_VERSION 2   // This is the major verion of this HAL.
-#define WIFI_HAL_MINOR_VERSION 8   // This is the minor verson of the HAL.
+#define WIFI_HAL_MINOR_VERSION 10   // This is the minor verson of the HAL.
 #define WIFI_HAL_MAINTENANCE_VERSION 0   // This is the maintenance version of the HAL.
 
 /**********************************************************************
@@ -199,6 +203,7 @@ typedef char   nas_id_t[49];
 typedef unsigned char   r0r1_key_t[16];
 typedef char r0r1_key_str_t[33];
 typedef char            mac_addr_str_t[18];
+typedef mac_address_t   bssid_t;
 
 //>> Deprecated: used for old RDKB code. 
 typedef struct _wifi_basicTrafficStats
@@ -7365,16 +7370,16 @@ typedef enum {
 #define MAX_KEY_HOLDERS		8
 typedef struct {
 	wifi_fastTrasitionSupport_t	support;
-    unsigned short          mobilityDomain;
+    USHORT                  mobilityDomain;
 	BOOL					overDS;
     nas_id_t                r0KeyHolder;
-    unsigned short          r0KeyLifeTime;
+    USHORT                  r0KeyLifeTime;
     mac_address_t           r1KeyHolder;
-    unsigned short          reassocDeadLine;
+    USHORT                  reassocDeadLine;
     BOOL                    pmkR1Push;
-    unsigned char           numR0KHs;
+    UCHAR                   numR0KHs;
     wifi_r0KH_t             r0KH[MAX_KEY_HOLDERS];
-    unsigned char           numR1KHs;
+    UCHAR                   numR1KHs;
     wifi_r1KH_t             r1KH[MAX_KEY_HOLDERS];
 } wifi_FastTransitionConfig_t;
 
@@ -7607,6 +7612,243 @@ UINT wifi_getFTR1KeyHolderID(INT apIndex, UCHAR *keyHolderID);
 UINT wifi_setFTR1KeyHolderID(INT apIndex, UCHAR *keyHolderID);
 
 INT wifi_pushApFastTransitionConfig(INT apIndex, wifi_FastTransitionConfig_t *ftData);
+
+// 802.11v BSS Transition Management Definitions
+
+#define MAX_BTM_DEVICES     64
+#define MAX_URL_LEN         512
+#define MAX_CANDIDATES      64
+
+// BSS Termination Duration subelement, ID = 4, 802.11 section 9.4.2.2.
+// This is a subelement because it is specific to Neighbor Report, and BTM
+// Request Frame.
+typedef struct {
+    ULONG               tsf;    // 8 octet TSF timer value.
+    USHORT              duration;
+} wifi_BTMTerminationDurationElement_t;
+
+typedef struct {
+    bssid_t             bssid;
+    UINT                info;
+    UCHAR               opClass;
+    UCHAR               channel;
+    UCHAR               phyTable;
+    //  32 bit optional value, bit fileds are
+    //  b0, b1 for reachability
+    //  b2 security
+    //  b3 key scope
+    //  b4 to b9 capabilities
+    //  b10 mobility domain
+    //  b11 high troughput
+    //  b12 very high throughput
+    //  b13 ftm
+    UINT                optional;
+} wifi_NeighborReportElement_t;
+
+// BSS Transition Management Request Frame, 802.11-2016 section 9.6.14.9.
+typedef struct {
+    mac_address_t       peerMac;
+    UCHAR               category;           // protected or unprotected WNM; 10 or 11
+    UCHAR               action;             // value 7 for BTM request
+    UCHAR               token;              // set by STA to relate reports
+    UCHAR               requestMode;        // Requested instructions for the STA.
+    USHORT              timer;
+    UCHAR               validityInterval;
+    // Length of the optional fields below.
+    UINT btm_OptionalFieldsLength;
+    // The optional fields may include:
+    // 1. BSS Termination Duration Subelement, ID = 4. 802.11-2016 Figure 9-300.
+    // 2. Session Information URL.
+    // 3. BSS Transition Candidate List Entries represented by a list of 0
+    //    or Neighbor Report Elements; see the wifi_NeighborReportElement_t
+    //    definition in the wifi_hal_neighbor_report.h file attached to
+    //    RDKB-16634.
+    wifi_BTMTerminationDurationElement_t    termDuration;
+    USHORT                  urlLen;
+    CHAR                    url[MAX_URL_LEN];
+    UCHAR                   numCandidates;
+    wifi_NeighborReportElement_t    candidates[MAX_CANDIDATES];
+} wifi_BTMRequestFrame_t;
+
+// BSS Transition Management Query Frame, 802.11-2016 section 9.6.14.8.
+// Received from non-AP STA.
+typedef struct {
+    UCHAR               category;       // protected or unprotected WNM; 10 or 11
+    UCHAR               action;         // value 6 for BTM Query
+    UCHAR               token;          // set by STA to relate reports
+    UCHAR               queryReason;
+    UCHAR                   numCandidates;
+    wifi_NeighborReportElement_t    candidates[MAX_CANDIDATES];
+} wifi_BTMQueryFrame_t;
+
+// BSS Transition Management Response Frame, 802.11-2016 section 9.6.14.10.
+// Received from non-AP STA.
+typedef struct {
+    UCHAR               category;       // protected or unprotected WNM; 10 or 11
+    UCHAR               action;         // value 6 for BTM Query
+    UCHAR               token;          // set by STA to relate reports
+    UCHAR               status;
+    UCHAR               terminationDelay;
+    bssid_t             target;
+    UCHAR                   numCandidates;
+    wifi_NeighborReportElement_t    candidates[MAX_CANDIDATES];
+} wifi_BTMResponseFrame_t;
+
+// Structure to return BTM extended capability from devices on the LAN.
+// The peer and capability arrays are parallel
+// and have the same number of entries.
+typedef struct {
+    UINT                entries;                        // Number of entries in each of the following arrays.
+    mac_address_t       peer[MAX_BTM_DEVICES];          // Array a peer device MAC addresses.
+    BOOL                capability[MAX_BTM_DEVICES];    // Array of bool indicating peer BSS transition capability.
+} wifi_BTMCapabilities_t;
+
+/* @description This call back is invoked when a STA sends a BTM query
+ * message to a vAP in the gateway.  The driver will use the frame returned
+ * from this function to process the response to the query.
+ * A BTM transaction is started by a STA sending a query or by the AP sending
+ * an autonomous request.  This callback is used for the former.
+ *
+ * @param apIndex - Access Point Index.
+ * @param peerMACAddress - MAC address of the peer STA the Query was received from.
+ * @param inQueryFrame - Query frame received from a non-AP STA.
+ * @param inMemSize - Size of the memory allocated by the callback.  The caller
+ *      should set to max size for the request.  Otherwise the callback may
+ *      drop elements or return an error.
+ * @param inRequestFrame - Frame to use for the response.  The caller
+ *      allocates the memory for the response.  The caller may free the memory
+ *      when the callback returns and the response is sent to the STA.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ *
+ * @execution Synchronous
+ * @sideeffect None
+ *
+ * @note This function must not suspend and must not invoke any blocking system
+ * calls.
+ */
+typedef UINT (* wifi_BTMQueryRequest_callback)(UINT apIndex,
+                                                    mac_address_t peerMac,
+                                                    wifi_BTMQueryFrame_t *inQueryFrame,
+                                                    UINT inMemSize,
+                                                    wifi_BTMRequestFrame_t *inRequestFrame);
+
+/* @description This call back is invoked when a STA responds to a BTM Request
+ * from the gateway.
+ *
+ * @param apIndex - Access Point Index.
+ * @param peerMACAddress - MAC address of the peer the response was received
+ * from.
+ * @param in_struct - Response frame received from a non-AP STA.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ *
+ * @execution Synchronous
+ * @sideeffect None
+ *
+ * @note This function must not suspend and must not invoke any blocking system
+ * calls.
+ */
+typedef UINT (* wifi_BTMResponse_callback)(UINT apIndex,
+                                            mac_address_t peerMac,
+                                            wifi_BTMResponseFrame_t *in_struct);
+/*
+ * @description BTM Query callback registration function.
+ *
+ * @param callback_proc - wifi_newApAssociatedDevice_callback callback function
+ *
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ *
+ * @execution Synchronous
+ * @sideeffect None
+ *
+ * @note This function must not suspend and must not invoke any blocking system
+ * calls.
+ */
+UINT wifi_BTMQueryRequest_callback_register(
+                                            wifi_BTMQueryRequest_callback btmRequestCallback,
+                                            wifi_BTMResponse_callback btmResponseCallback);
+
+/*
+ * @description Set a BTM Request to a non-AP STA.  The callback register
+ * function should be called first so that the response can be handled by the
+ * application.
+ *
+ * @param apIndex; index of the vAP to send the request from.
+ * @param peerMACAddress; MAC address of the peer device to send the request to.
+ * @param in_struct; BTM Request Frame to send to the non-AP STA.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ *
+ * @execution Synchronous
+ * @sideeffect None
+ *
+ * @note This function must not suspend and must not invoke any blocking system
+ * calls.
+ */
+UINT wifi_setBTMRequest(UINT apIndex,
+                        wifi_BTMRequestFrame_t *in_struct);
+
+/* @description Get the BTM implemented value.  When not implemented the
+ * gateway ignores a BTM query request as defined in 802.11-2016 section
+ * 11.11.10.3.
+ *
+ * @param apIndex - AP Index the setting applies to.
+ * @param activate - True for implemented false for not implemented.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_getBSSTransitionImplemented(UINT apIndex, BOOL *activate);
+
+/* @description Set the BTM capability to activated or deactivated,
+ * same as enabled or disabled.  The word "activated" is used here because
+ * that's what's used in the 802.11 specification.  When deactivate the
+ * gateway ignores a BTM report request as defined in 802.11-2016 section
+ * 11.11.10.3.  The AP (apIndex) BSS Transition bit in any Extended Capabilities
+ * element sent out is set corresponding to the activate parameter.
+ *
+ * @param apIndex - AP Index the setting applies to.
+ * @param activate - True for activate false for deactivate.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_setBSSTransitionActivation(UINT apIndex, BOOL activate);
+
+/* @description Get the BTM capability of activated or deactivated,
+ * same as enabled or disabled.
+ *
+ * @param apIndex - AP Index the setting applies to.
+ * @param activate - True for activate false for deactivate.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_getBSSTransitionActivation(UINT apIndex, BOOL *activate);
+
+/* @description Get the BTM capability of an external STA.  Reports the value
+ * of the BSS Transition bit in the Extended Capabilities element, if detected,
+ * from an external STA.  Reports the latest value detected in the element
+ * received by any vAP in any frame type.
+ *
+ * @param apIndex - AP the Extended Capabilities elements were received on.
+ * @param extBTMCapabilities - structure with parallel arrays of peer MAC
+ * addresses and BTM capability indicators.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_getBTMClientCapabilityList(UINT apIndex,
+                                     wifi_BTMCapabilities_t *extBTMCapabilities);
 
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.DGAFEnable	
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.ANQPDomainID

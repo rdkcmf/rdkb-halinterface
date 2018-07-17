@@ -86,6 +86,8 @@
       1. Add HAL function definitions for 802.11r Fast Transition
     What is new for 2.10.0
       1. Add HAL function definitions for 802.11v BSS Transition Management
+    What is new for 2.11.0
+      1. Add HAL function definitions for 802.11k Neighbor Request and Response definitions
 **********************************************************************/
 /**
 * @file wifi_hal.h
@@ -189,9 +191,9 @@
 #define AP_INDEX_16 16
 #endif
 
-//defines for HAL version 2.10.0
+//defines for HAL version 2.11.0
 #define WIFI_HAL_MAJOR_VERSION 2   // This is the major verion of this HAL.
-#define WIFI_HAL_MINOR_VERSION 10   // This is the minor verson of the HAL.
+#define WIFI_HAL_MINOR_VERSION 11   // This is the minor verson of the HAL.
 #define WIFI_HAL_MAINTENANCE_VERSION 0   // This is the maintenance version of the HAL.
 
 /**********************************************************************
@@ -204,6 +206,7 @@ typedef unsigned char   r0r1_key_t[16];
 typedef char r0r1_key_str_t[33];
 typedef char            mac_addr_str_t[18];
 typedef mac_address_t   bssid_t;
+typedef char            ssid_t[32];
 
 //>> Deprecated: used for old RDKB code. 
 typedef struct _wifi_basicTrafficStats
@@ -7618,6 +7621,7 @@ INT wifi_pushApFastTransitionConfig(INT apIndex, wifi_FastTransitionConfig_t *ft
 #define MAX_BTM_DEVICES     64
 #define MAX_URL_LEN         512
 #define MAX_CANDIDATES      64
+#define MAX_VENDOR_SPECIFIC 32
 
 // BSS Termination Duration subelement, ID = 4, 802.11 section 9.4.2.2.
 // This is a subelement because it is specific to Neighbor Report, and BTM
@@ -7625,14 +7629,112 @@ INT wifi_pushApFastTransitionConfig(INT apIndex, wifi_FastTransitionConfig_t *ft
 typedef struct {
     ULONG               tsf;    // 8 octet TSF timer value.
     USHORT              duration;
-} wifi_BTMTerminationDurationElement_t;
+} wifi_BTMTerminationDuration_t;
+
+typedef struct {
+    CHAR                condensedStr[3];  // 2 char country code from do11CountryString.
+} wifi_CondensedCountryString_t;
+
+typedef struct {
+    USHORT              offset;
+    USHORT              interval;
+} wifi_TSFInfo_t;
+
+typedef struct {
+    UCHAR               preference;
+} wifi_BSSTransitionCandidatePreference_t;
+
+typedef struct {
+    USHORT              bearing;
+    UINT                dist;
+    USHORT              height;
+} wifi_Bearing_t;
+
+// Wide Bandwidth Channel Element, ID = 194.  802.11-2016 section 9.4.2.161.
+typedef struct {
+    UCHAR               bandwidth;
+    UCHAR               centerSeg0;
+    UCHAR               centerSeg1;
+} wifi_WideBWChannel_t;
+
+typedef struct {
+    UCHAR                   token;
+    UCHAR                   mode;
+    UCHAR                   type;
+    union {
+        UCHAR               lci;
+        UCHAR               lcr;
+    } u;
+} wifi_Measurement_t;
+
+// HT Capabilities Element, ID = 45.  802.11-2016 section 9.4.2.56.
+typedef struct {
+    
+    USHORT                  info;           // Bitfield where bit 0 is info[0] bit 0.
+    UCHAR                   ampduParams;
+    UCHAR                   mcs[16];        // Bitfield where bit 0 is mcs[0] bit 0.
+    USHORT                  extended;       // Bitfield where bit 0 is ele_HTExtendedCapabilities[0] bit 0.
+    UINT                    txBeamCaps;     // Bitfield where bit 0 is ele_TransmitBeamFormingCapabilities[0] bit 0.
+    UCHAR                   aselCaps;
+} wifi_HTCapabilities_t;
+
+// VHT Capabilities Element, ID = 191.  802.11-2016 section 9.4.2.158.
+typedef struct {
+    UINT                    info;
+    // The Supported VHT-MCS and NSS Set field is 64 bits long, but is broken
+    // into 4 16 bit fields for convenience.
+    USHORT                  mcs;
+    USHORT                  rxHighestSupportedRate;
+    USHORT                  txVHTmcs;
+    USHORT                  txHighestSupportedRate;
+} wifi_VHTCapabilities_t;
+
+// HT OperationElement, ID = 61, 802.11-2016 section 9.4.2.57.
+typedef struct {
+    UCHAR                   primary;
+    UCHAR                   opInfo[5];   // Bitfield where bit 0 is ele_HTOperationInfo[0] bit 0;
+    UCHAR                   mcs[16];
+} wifi_HTOperation_t;
+
+// VHT Operation Element, ID = 192.  802.11-2016 section 9.4.2.159.
+typedef struct {
+    wifi_WideBWChannel_t        opInfo;         // channel width, center of seg0, center of seg1
+    USHORT                      mcs_nss;        // Bit field.
+} wifi_VHTOperation_t;
+
+// Secondary Channel Offset Element, ID = 62, 802.11-2016 section
+// 9.4.2.20.
+typedef struct {
+    UCHAR                       secondaryChOffset;
+} wifi_SecondaryChannelOffset_t;
+
+// RM Enabled Capabilities Element, ID = 70, 802.11-2016 section
+// 9.4.2.45.
+typedef struct {
+    // This is a bit field defined by table 9-157.  Bit 0 for all of the
+    // capabilities is ele_RMEnabledCapabilities[5] bit 0.
+    UCHAR                       capabilities[5];
+} wifi_RMEnabledCapabilities_t;
+
+// Vendor Specific Element, ID = 221.  802.11-2016 section 9.4.2.26.
+typedef struct {
+    // 3 or 5 octet OUI depending on format; see 802.11-2016 section 9.4.1.32.
+    UCHAR           oui[5];
+    // Vendor specific content.
+    UCHAR           buff[MAX_VENDOR_SPECIFIC];
+} wifi_VendorSpecific_t;
+
+// Measurement Pilot Transmission Element, ID = 66, 802.11-2016 section
+// 9.4.2.42.
+typedef struct {
+    UCHAR                       pilot;
+    // Series of (sub)elements.  Table 9-155 only lists vendor specific.
+    wifi_VendorSpecific_t                       vendorSpecific;
+} wifi_MeasurementPilotTransmission_t;
+
 
 typedef struct {
     bssid_t             bssid;
-    UINT                info;
-    UCHAR               opClass;
-    UCHAR               channel;
-    UCHAR               phyTable;
     //  32 bit optional value, bit fileds are
     //  b0, b1 for reachability
     //  b2 security
@@ -7642,57 +7744,77 @@ typedef struct {
     //  b11 high troughput
     //  b12 very high throughput
     //  b13 ftm
-    UINT                optional;
-} wifi_NeighborReportElement_t;
+    //  b14 to b31 reserved
+    UINT                info;
+    UCHAR               opClass;
+    UCHAR               channel;
+    UCHAR               phyTable;
+    BOOL                tsfPresent;
+    wifi_TSFInfo_t      tsfInfo;
+    BOOL                condensedCountrySringPresent;
+    wifi_CondensedCountryString_t   condensedCountryStr;
+    BOOL                bssTransitionCandidatePreferencePresent;
+    wifi_BSSTransitionCandidatePreference_t         bssTransitionCandidatePreference;
+    BOOL                btmTerminationDurationPresent;
+    wifi_BTMTerminationDuration_t   btmTerminationDuration;
+    BOOL                bearingPresent;
+    wifi_Bearing_t      bearing;
+    BOOL                wideBandWidthChannelPresent;
+    wifi_WideBWChannel_t    wideBandwidthChannel;
+    BOOL                htCapsPresent;
+    wifi_HTCapabilities_t   htCaps;
+    BOOL                vhtCapsPresent;
+    wifi_VHTCapabilities_t  vbhtCaps;
+    BOOL                    htOpPresent;
+    wifi_HTOperation_t      htOp;
+    BOOL                    vhtOpPresent;
+    wifi_VHTOperation_t     vhtOp;
+    BOOL                    secondaryChannelOffsetPresent;
+    wifi_SecondaryChannelOffset_t   secondaryChannelOffset;
+    BOOL                    rmEnabledCapsPresent;
+    wifi_RMEnabledCapabilities_t    rmEnabledCaps;
+    BOOL                            msmtPilotTransmissionPresent;
+    wifi_MeasurementPilotTransmission_t     msmtPilotTransmission;
+    BOOL                    vendorSpecificPresent;
+    wifi_VendorSpecific_t   vendorSpecific;
+} wifi_NeighborReport_t;
 
 // BSS Transition Management Request Frame, 802.11-2016 section 9.6.14.9.
 typedef struct {
-    mac_address_t       peerMac;
-    UCHAR               category;           // protected or unprotected WNM; 10 or 11
-    UCHAR               action;             // value 7 for BTM request
     UCHAR               token;              // set by STA to relate reports
     UCHAR               requestMode;        // Requested instructions for the STA.
     USHORT              timer;
     UCHAR               validityInterval;
-    // Length of the optional fields below.
-    UINT btm_OptionalFieldsLength;
     // The optional fields may include:
     // 1. BSS Termination Duration Subelement, ID = 4. 802.11-2016 Figure 9-300.
     // 2. Session Information URL.
-    // 3. BSS Transition Candidate List Entries represented by a list of 0
-    //    or Neighbor Report Elements; see the wifi_NeighborReportElement_t
-    //    definition in the wifi_hal_neighbor_report.h file attached to
-    //    RDKB-16634.
-    wifi_BTMTerminationDurationElement_t    termDuration;
-    USHORT                  urlLen;
-    CHAR                    url[MAX_URL_LEN];
-    UCHAR                   numCandidates;
-    wifi_NeighborReportElement_t    candidates[MAX_CANDIDATES];
-} wifi_BTMRequestFrame_t;
+    // 3. BSS Transition Candidate List Entries
+    wifi_BTMTerminationDuration_t    termDuration;
+    USHORT              urlLen;
+    CHAR                url[MAX_URL_LEN];
+    UCHAR               numCandidates;
+    wifi_NeighborReport_t    candidates[MAX_CANDIDATES];
+} wifi_BTMRequest_t;
 
 // BSS Transition Management Query Frame, 802.11-2016 section 9.6.14.8.
 // Received from non-AP STA.
 typedef struct {
-    UCHAR               category;       // protected or unprotected WNM; 10 or 11
-    UCHAR               action;         // value 6 for BTM Query
-    UCHAR               token;          // set by STA to relate reports
-    UCHAR               queryReason;
+    UCHAR                   token;          // set by STA to relate reports
+    UCHAR                   queryReason;
     UCHAR                   numCandidates;
-    wifi_NeighborReportElement_t    candidates[MAX_CANDIDATES];
-} wifi_BTMQueryFrame_t;
+    wifi_NeighborReport_t   candidates[MAX_CANDIDATES];
+} wifi_BTMQuery_t;
 
 // BSS Transition Management Response Frame, 802.11-2016 section 9.6.14.10.
 // Received from non-AP STA.
 typedef struct {
-    UCHAR               category;       // protected or unprotected WNM; 10 or 11
-    UCHAR               action;         // value 6 for BTM Query
     UCHAR               token;          // set by STA to relate reports
     UCHAR               status;
     UCHAR               terminationDelay;
     bssid_t             target;
     UCHAR                   numCandidates;
-    wifi_NeighborReportElement_t    candidates[MAX_CANDIDATES];
-} wifi_BTMResponseFrame_t;
+    wifi_NeighborReport_t    candidates[MAX_CANDIDATES];
+} wifi_BTMResponse_t;
 
 // Structure to return BTM extended capability from devices on the LAN.
 // The peer and capability arrays are parallel
@@ -7730,9 +7852,9 @@ typedef struct {
  */
 typedef UINT (* wifi_BTMQueryRequest_callback)(UINT apIndex,
                                                     mac_address_t peerMac,
-                                                    wifi_BTMQueryFrame_t *inQueryFrame,
+                                                    wifi_BTMQuery_t *query,
                                                     UINT inMemSize,
-                                                    wifi_BTMRequestFrame_t *inRequestFrame);
+                                                    wifi_BTMRequest_t *request);
 
 /* @description This call back is invoked when a STA responds to a BTM Request
  * from the gateway.
@@ -7753,7 +7875,7 @@ typedef UINT (* wifi_BTMQueryRequest_callback)(UINT apIndex,
  */
 typedef UINT (* wifi_BTMResponse_callback)(UINT apIndex,
                                             mac_address_t peerMac,
-                                            wifi_BTMResponseFrame_t *in_struct);
+                                            wifi_BTMResponse_t *response);
 /*
  * @description BTM Query callback registration function.
  *
@@ -7795,7 +7917,8 @@ UINT wifi_BTMQueryRequest_callback_register(
  * calls.
  */
 UINT wifi_setBTMRequest(UINT apIndex,
-                        wifi_BTMRequestFrame_t *in_struct);
+                        mac_address_t       peerMac,
+                        wifi_BTMRequest_t *request);
 
 /* @description Get the BTM implemented value.  When not implemented the
  * gateway ignores a BTM query request as defined in 802.11-2016 section
@@ -7849,6 +7972,71 @@ UINT wifi_getBSSTransitionActivation(UINT apIndex, BOOL *activate);
  */
 UINT wifi_getBTMClientCapabilityList(UINT apIndex,
                                      wifi_BTMCapabilities_t *extBTMCapabilities);
+
+// 802.11k neighbor report definitions
+
+// 802.11-2016 section 9.6.7.6
+typedef struct {
+    UCHAR                   token;       // set by STA to relate reports
+    UCHAR                   ssidLen;     // set length to 0 if ssid is not present, otherwise to length of ssid field
+    ssid_t                  ssid;
+    UCHAR                   measCount;      /* Request for LCI/LCR may come in any order */
+    wifi_Measurement_t      measurements[2];
+} wifi_NeighborRequestFrame_t;
+
+/* @description Set the neighbor reports to be reported by the AP.  Calling
+ * this function over-writes any previously set Neighbor BSSID set.  The set
+ * is not persistent.
+ *
+ * @param apIndex - Index of the vAP to send the request from
+ * @param in_NumberNeighborReports - Number of reports in the in_NeighborReports
+ *      set.
+ * @param in_NeighborReports - One or more neighbor reports to be reported by
+ *      the AP.
+ *
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_setNeighborReports(UINT apIndex,
+                             UINT numNeighborReports,
+                             wifi_NeighborReport_t *neighborReports);
+
+/* @description Set the neighbor report capability to activated or deactivated,
+ * same as enabled or disabled.  The word "activated" is used here because
+ * that's what's used in the 802.11 specification.  When deactivate the
+ * gateway ignores a neighbor report request as defined in 802.11-2016 section
+ * 11.11.10.3.
+ *
+ * Reciept of the TR-181 Object
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_NeighborReportActivated via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ *
+ * @param apIndex - AP Index the setting applies to.
+ * @param activate - True for activate false for deactivate.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_setNeighborReportActivation(UINT apIndex, BOOL activate);
+
+/* @description Get the neighbor report capability of activated or deactivated,
+ * same as enabled or disabled.
+ *
+ * Reciept of the TR-181 Object
+ * Device.WiFi.AccessPoint.{i}.X_RDKCENTRAL-COM_NeighborReportActivated via
+ * TR-069 or WebPA causes this function to be called with the value of the
+ * Object.
+ *
+ * @param apIndex - AP Index the setting applies to.
+ * @param activate - True for activate false for deactivate.
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+UINT wifi_getNeighborReportActivation(UINT apIndex, BOOL *activate);
+
 
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.DGAFEnable	
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.ANQPDomainID

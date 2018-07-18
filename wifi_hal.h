@@ -88,6 +88,8 @@
       1. Add HAL function definitions for 802.11v BSS Transition Management
     What is new for 2.11.0
       1. Add HAL function definitions for 802.11k Neighbor Request and Response definitions
+    What is new for 2.12.0
+      1. Add HAL function definitions for 802.11k Beacon Request and Response definitions
 **********************************************************************/
 /**
 * @file wifi_hal.h
@@ -191,9 +193,9 @@
 #define AP_INDEX_16 16
 #endif
 
-//defines for HAL version 2.11.0
+//defines for HAL version 2.12.0
 #define WIFI_HAL_MAJOR_VERSION 2   // This is the major verion of this HAL.
-#define WIFI_HAL_MINOR_VERSION 11   // This is the minor verson of the HAL.
+#define WIFI_HAL_MINOR_VERSION 12   // This is the minor verson of the HAL.
 #define WIFI_HAL_MAINTENANCE_VERSION 0   // This is the maintenance version of the HAL.
 
 /**********************************************************************
@@ -7401,7 +7403,7 @@ typedef struct {
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_setFastBSSTransitionActivated(INT apIndex, UCHAR activate);
+INT wifi_setFastBSSTransitionActivated(INT apIndex, UCHAR activate);
 
 /* @description Get the Fast Transition capability value.  
  * 
@@ -7416,7 +7418,7 @@ UINT wifi_setFastBSSTransitionActivated(INT apIndex, UCHAR activate);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_getBSSTransitionActivated(INT apIndex, BOOL *activate);
+INT wifi_getBSSTransitionActivated(INT apIndex, BOOL *activate);
 
 /* @description Get the Fast Transition over DS activated value.  
  * See 802.11-2016 section 13.3.
@@ -7433,7 +7435,7 @@ UINT wifi_getBSSTransitionActivated(INT apIndex, BOOL *activate);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_getFTOverDSActivated(INT apIndex, BOOL *activate);
+INT wifi_getFTOverDSActivated(INT apIndex, BOOL *activate);
 
 /* @description Set the Fast Transition over DS activated value. 
  * See 802.11-2016 section 13.3. 
@@ -7450,7 +7452,7 @@ UINT wifi_getFTOverDSActivated(INT apIndex, BOOL *activate);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_setFTOverDSActivated(INT apIndex, BOOL *activate);
+INT wifi_setFTOverDSActivated(INT apIndex, BOOL *activate);
 
 /* @description Get the Fast Transition Mobility Domain value. 
  * See 802.11-2016 section 13.3. 
@@ -7466,7 +7468,7 @@ UINT wifi_setFTOverDSActivated(INT apIndex, BOOL *activate);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_getFTMobilityDomainID(INT apIndex, UCHAR mobilityDomain[2]);
+INT wifi_getFTMobilityDomainID(INT apIndex, UCHAR mobilityDomain[2]);
 
 /* @description Set the Fast Transition Mobility Domain value.  
  * See 802.11-2016 section 13.3.
@@ -7482,7 +7484,7 @@ UINT wifi_getFTMobilityDomainID(INT apIndex, UCHAR mobilityDomain[2]);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_setFTMobilityDomainID(INT apIndex, UCHAR mobilityDomain[2]);
+INT wifi_setFTMobilityDomainID(INT apIndex, UCHAR mobilityDomain[2]);
 
 /* @description Get the Fast Transition Resource Request Support value. 
  * See 802.11-2016 section 13.3. 
@@ -7499,7 +7501,7 @@ UINT wifi_setFTMobilityDomainID(INT apIndex, UCHAR mobilityDomain[2]);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_getFTResourceRequestSupported(INT apIndex, BOOL *supported);
+INT wifi_getFTResourceRequestSupported(INT apIndex, BOOL *supported);
 
 /* @description Set the Fast Transition Resource Request Support value.  
  * See 802.11-2016 section 13.3.
@@ -7516,7 +7518,7 @@ UINT wifi_getFTResourceRequestSupported(INT apIndex, BOOL *supported);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_setFTResourceRequestSupported(INT apIndex, BOOL *supported);
+INT wifi_setFTResourceRequestSupported(INT apIndex, BOOL *supported);
 
 /* @description Get the Fast Transition R0 Key Lifetime value.  
  * See 802.11-2016 section 13.4.2.
@@ -7532,7 +7534,7 @@ UINT wifi_setFTResourceRequestSupported(INT apIndex, BOOL *supported);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_getFTR0KeyLifetime(INT apIndex, UINT *lifetime);
+INT wifi_getFTR0KeyLifetime(INT apIndex, UINT *lifetime);
 
 /* @description Set the Fast Transition R0 Key Lifetime value.  
  * See 802.11-2016 section 13.4.2
@@ -7548,7 +7550,7 @@ UINT wifi_getFTR0KeyLifetime(INT apIndex, UINT *lifetime);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_setFTR0KeyLifetime(INT apIndex, UINT *lifetime);
+INT wifi_setFTR0KeyLifetime(INT apIndex, UINT *lifetime);
 
 /* @description Get the Fast Transition R0 Key Holder ID value.  
  * See 802.11-2016 section 13.3.
@@ -7564,7 +7566,7 @@ UINT wifi_setFTR0KeyLifetime(INT apIndex, UINT *lifetime);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_getFTR0KeyHolderID(INT apIndex, UCHAR *keyHolderID);
+INT wifi_getFTR0KeyHolderID(INT apIndex, UCHAR *keyHolderID);
 
 /* @description Set the Fast Transition R0 Key Holder ID value.  
  * See 802.11-2016 section 13.3.
@@ -7580,7 +7582,7 @@ UINT wifi_getFTR0KeyHolderID(INT apIndex, UCHAR *keyHolderID);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_setFTR0KeyHolderID(INT apIndex, UCHAR *keyHolderID);
+INT wifi_setFTR0KeyHolderID(INT apIndex, UCHAR *keyHolderID);
 
 /* @description Get the Fast Transition R1 Key Holder ID value.  
  * See 802.11-2016 section 13.3.
@@ -7596,7 +7598,7 @@ UINT wifi_setFTR0KeyHolderID(INT apIndex, UCHAR *keyHolderID);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_getFTR1KeyHolderID(INT apIndex, UCHAR *keyHolderID);
+INT wifi_getFTR1KeyHolderID(INT apIndex, UCHAR *keyHolderID);
 
 /* @description Set the Fast Transition R1 Key Holder ID value.  
  * See 802.11-2016 section 13.3.
@@ -7612,7 +7614,7 @@ UINT wifi_getFTR1KeyHolderID(INT apIndex, UCHAR *keyHolderID);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_setFTR1KeyHolderID(INT apIndex, UCHAR *keyHolderID);
+INT wifi_setFTR1KeyHolderID(INT apIndex, UCHAR *keyHolderID);
 
 INT wifi_pushApFastTransitionConfig(INT apIndex, wifi_FastTransitionConfig_t *ftData);
 
@@ -7850,7 +7852,7 @@ typedef struct {
  * @note This function must not suspend and must not invoke any blocking system
  * calls.
  */
-typedef UINT (* wifi_BTMQueryRequest_callback)(UINT apIndex,
+typedef INT (* wifi_BTMQueryRequest_callback)(UINT apIndex,
                                                     mac_address_t peerMac,
                                                     wifi_BTMQuery_t *query,
                                                     UINT inMemSize,
@@ -7873,7 +7875,7 @@ typedef UINT (* wifi_BTMQueryRequest_callback)(UINT apIndex,
  * @note This function must not suspend and must not invoke any blocking system
  * calls.
  */
-typedef UINT (* wifi_BTMResponse_callback)(UINT apIndex,
+typedef INT (* wifi_BTMResponse_callback)(UINT apIndex,
                                             mac_address_t peerMac,
                                             wifi_BTMResponse_t *response);
 /*
@@ -7894,7 +7896,7 @@ typedef UINT (* wifi_BTMResponse_callback)(UINT apIndex,
  * @note This function must not suspend and must not invoke any blocking system
  * calls.
  */
-UINT wifi_BTMQueryRequest_callback_register(
+INT wifi_BTMQueryRequest_callback_register(
                                             wifi_BTMQueryRequest_callback btmRequestCallback,
                                             wifi_BTMResponse_callback btmResponseCallback);
 
@@ -7916,7 +7918,7 @@ UINT wifi_BTMQueryRequest_callback_register(
  * @note This function must not suspend and must not invoke any blocking system
  * calls.
  */
-UINT wifi_setBTMRequest(UINT apIndex,
+INT wifi_setBTMRequest(UINT apIndex,
                         mac_address_t       peerMac,
                         wifi_BTMRequest_t *request);
 
@@ -7930,7 +7932,7 @@ UINT wifi_setBTMRequest(UINT apIndex,
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_getBSSTransitionImplemented(UINT apIndex, BOOL *activate);
+INT wifi_getBSSTransitionImplemented(UINT apIndex, BOOL *activate);
 
 /* @description Set the BTM capability to activated or deactivated,
  * same as enabled or disabled.  The word "activated" is used here because
@@ -7945,7 +7947,7 @@ UINT wifi_getBSSTransitionImplemented(UINT apIndex, BOOL *activate);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_setBSSTransitionActivation(UINT apIndex, BOOL activate);
+INT wifi_setBSSTransitionActivation(UINT apIndex, BOOL activate);
 
 /* @description Get the BTM capability of activated or deactivated,
  * same as enabled or disabled.
@@ -7956,7 +7958,7 @@ UINT wifi_setBSSTransitionActivation(UINT apIndex, BOOL activate);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_getBSSTransitionActivation(UINT apIndex, BOOL *activate);
+INT wifi_getBSSTransitionActivation(UINT apIndex, BOOL *activate);
 
 /* @description Get the BTM capability of an external STA.  Reports the value
  * of the BSS Transition bit in the Extended Capabilities element, if detected,
@@ -7970,7 +7972,7 @@ UINT wifi_getBSSTransitionActivation(UINT apIndex, BOOL *activate);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_getBTMClientCapabilityList(UINT apIndex,
+INT wifi_getBTMClientCapabilityList(UINT apIndex,
                                      wifi_BTMCapabilities_t *extBTMCapabilities);
 
 // 802.11k neighbor report definitions
@@ -7998,7 +8000,7 @@ typedef struct {
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_setNeighborReports(UINT apIndex,
+INT wifi_setNeighborReports(UINT apIndex,
                              UINT numNeighborReports,
                              wifi_NeighborReport_t *neighborReports);
 
@@ -8019,7 +8021,7 @@ UINT wifi_setNeighborReports(UINT apIndex,
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_setNeighborReportActivation(UINT apIndex, BOOL activate);
+INT wifi_setNeighborReportActivation(UINT apIndex, BOOL activate);
 
 /* @description Get the neighbor report capability of activated or deactivated,
  * same as enabled or disabled.
@@ -8035,7 +8037,166 @@ UINT wifi_setNeighborReportActivation(UINT apIndex, BOOL activate);
  * @retval RETURN_OK if successful.
  * @retval RETURN_ERR if any error is detected.
  */
-UINT wifi_getNeighborReportActivation(UINT apIndex, BOOL *activate);
+INT wifi_getNeighborReportActivation(UINT apIndex, BOOL *activate);
+
+
+// 802.11k Beacon request & report structures and function prototypes
+#define MAX_REQUESTED_ELEMS     8
+#define MAX_CHANNELS            16
+
+typedef struct {
+    UCHAR               condition;
+    UCHAR               threshold;
+} wifi_BeaconReporting_t;
+
+typedef struct {
+    UCHAR               ids[MAX_REQUESTED_ELEMS];
+} wifi_RequestedElementIDS_t;
+
+typedef wifi_RequestedElementIDS_t  wifi_ExtdRequestedElementIDS_t;
+
+// AP Channel Report Element, ID = 51, 802.11-2016 section 9.4.2.36.
+typedef struct {
+    UCHAR               opClass;
+    UCHAR               channels[MAX_CHANNELS];
+} wifi_ChannelReport_t;
+
+// 802.11-2016 section 9.4.2.21.7
+typedef struct {
+    UCHAR               opClass;
+    UCHAR               channel;
+    USHORT              randomizationInterval;
+    USHORT              duration;
+    UCHAR               mode;
+    bssid_t             bssid;
+    BOOL                ssidPresent;
+    ssid_t              ssid;
+    BOOL                beaconReportingPresent;
+    wifi_BeaconReporting_t  beaconReporting;
+    BOOL                reportingRetailPresent;
+    UCHAR               reportingDetail;
+    BOOL                wideBandWidthChannelPresent;
+    wifi_WideBWChannel_t    wideBandwidthChannel;
+    BOOL                requestedElementIDSPresent;
+    wifi_RequestedElementIDS_t      requestedElementIDS;
+    BOOL                extdRequestedElementIDSPresent;
+    wifi_ExtdRequestedElementIDS_t  extdRequestedElementIDS;
+    BOOL                channelReportPresent;
+    wifi_ChannelReport_t    channelReport;
+    BOOL                vendorSpecificPresent;
+    wifi_VendorSpecific_t   vendorSpecific;
+} wifi_BeaconRequest_t;
+
+// 802.11-2016 section 9.4.2.22.7
+typedef struct {
+    UCHAR               opClass;
+    UCHAR               channel;
+    ULONG               startTime;
+    USHORT              duration;
+    UCHAR               frameInfo;
+    UCHAR               rcpi;
+    UCHAR               rsni;
+    bssid_t             bssid;
+    UCHAR               antenna;
+    UINT                tsf;
+    BOOL                wideBandWidthChannelPresent;
+    wifi_WideBWChannel_t    wideBandwidthChannel;
+} wifi_BeaconReport_t;
+
+/* @description This call back is invoked when a STA responds to a Beacon
+ * Request from the gateway, or as a triggered autonomous report.  Noting that
+ * an autonomous report can be configured by a Beacon Request by setting the
+ * enable, request, and report bits in the measurement request; 802.11-2016
+ * Table 9-81 and section 11.11.8.  When a triggered autonomous report
+ * causes the callback to be called the dialog token and measurement token are
+ * both set to 0.
+ *
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ *
+ * @execution Synchronous
+ * @sideeffect None
+ *
+ * @note This function must not suspend and must not invoke any blocking system
+ * calls.
+ */
+typedef INT (*wifi_RMBeaconReport_callback)(wifi_BeaconReport_t *out_struct,
+                                                    UCHAR *out_DialogToken);
+
+/* @description Register a callback for a Beacon Request.  Called when a
+ * response to a Beacon Request is received, or a Beacon Report is received
+ * from an autonomous trigger.
+ *
+ * @param apIndex; index of the vAP the Beacon Report was received on.
+ * @param beaconReportCallback; the callback function being registered.
+ *
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+INT wifi_RMBeaconRequestCallbackRegister(UINT apIndex,
+                                          wifi_RMBeaconReport_callback beaconReportCallback);
+
+/* @description Unegister a callback for a Beacon Request.  Returns an error
+ * if the callback hasn't been registered.
+ *
+ * @param apIndex; index of the vAP the Beacon Report was received on.
+ * @param beaconReportCallback; the callback function being unregistered.
+ *
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.
+ */
+INT wifi_RMBeaconRequestCallbackUnregister(UINT apIndex,
+                                            wifi_RMBeaconReport_callback beaconReportCallback);
+
+/* @description Set a radio measurement (RM) beacon request.  Causes the
+ * request to be sent based on the information in the request parameter.
+ * Sent from the AP at apIndex.  Returns an error if a callback has not been
+ * registered for the AP.
+ *
+ * @param apIndex; index of the vAP to send the request from.
+ * @param peerMACAddress, MAC address of the peer device to send the request
+ *      to.  Must be an external device MAC address.
+ * @param in_request; pointer to a Beacon Report request structure.
+ * @param out_DialogToken; the token chosen by the STA for the requested
+ *      measurement(s);
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.  If the AP can determine that
+ *      the target device does not support Radio Measurement, then an error
+ *      is returned.
+ */
+INT wifi_setRMBeaconRequest(UINT apIndex,
+                             mac_address_t peer,
+                             wifi_BeaconRequest_t *in_request,
+                             UCHAR *out_DialogToken);
+
+/* @description Cancel all of the currently cached beacon reports and ignore
+ *      reports received that match the dialog tokan
+ * // @param apIndex; index of the vAP the beacon request was sent from.
+ * @param dialogToken; token the STA assigned to the beacon request.
+ */
+INT wifi_cancelRMBeaconRequest(UINT apIndex, UCHAR dialogToken);
+
+/* @description Get the Radio Measurement Capabilities from another peer
+ * device.
+ *
+ * @param peerMACAddress; MAC Address of the external peer device used to
+ * determine if an Radio Measurement Capabiliites Element is available.
+ * @param out_Capabilities; array formatted as defined in 802.11-2016
+ * Table 9-157.  The Beacon Report Capability is indicated by bit 7.  The
+ * Beacon Passive, Active, and Table Capabilities are indicated by bits
+ * 4, 5, 6 respectively.
+ *
+ * @return The capabilities returned in a Radio Measurement Element if
+ * received.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if any error is detected.  If the AP has not received
+ * a Radio Measurement Element from the peer, then an error is returned.
+ */
+INT wifi_getRMCapabilities(mac_address_t peer, UCHAR out_Capabilities[5]);
 
 
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.DGAFEnable	

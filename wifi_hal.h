@@ -7853,7 +7853,7 @@ typedef struct {
  * calls.
  */
 typedef INT (* wifi_BTMQueryRequest_callback)(UINT apIndex,
-                                                    mac_address_t peerMac,
+                                                    CHAR *peerMac,
                                                     wifi_BTMQuery_t *query,
                                                     UINT inMemSize,
                                                     wifi_BTMRequest_t *request);
@@ -7876,7 +7876,7 @@ typedef INT (* wifi_BTMQueryRequest_callback)(UINT apIndex,
  * calls.
  */
 typedef INT (* wifi_BTMResponse_callback)(UINT apIndex,
-                                            mac_address_t peerMac,
+                                            CHAR *peerMac,
                                             wifi_BTMResponse_t *response);
 /*
  * @description BTM Query callback registration function.
@@ -7919,7 +7919,7 @@ INT wifi_BTMQueryRequest_callback_register(
  * calls.
  */
 INT wifi_setBTMRequest(UINT apIndex,
-                        mac_address_t       peerMac,
+                        CHAR       *peerMac,
                         wifi_BTMRequest_t *request);
 
 /* @description Get the BTM implemented value.  When not implemented the
@@ -8121,7 +8121,8 @@ typedef struct {
  * @note This function must not suspend and must not invoke any blocking system
  * calls.
  */
-typedef INT (*wifi_RMBeaconReport_callback)(wifi_BeaconReport_t *out_struct,
+typedef INT (*wifi_RMBeaconReport_callback)(UINT apIndex,
+													wifi_BeaconReport_t *out_struct,
                                                     UCHAR *out_DialogToken);
 
 /* @description Register a callback for a Beacon Request.  Called when a
@@ -8169,7 +8170,7 @@ INT wifi_RMBeaconRequestCallbackUnregister(UINT apIndex,
  *      is returned.
  */
 INT wifi_setRMBeaconRequest(UINT apIndex,
-                             mac_address_t peer,
+                             CHAR *peer,
                              wifi_BeaconRequest_t *in_request,
                              UCHAR *out_DialogToken);
 
@@ -8196,7 +8197,7 @@ INT wifi_cancelRMBeaconRequest(UINT apIndex, UCHAR dialogToken);
  * @retval RETURN_ERR if any error is detected.  If the AP has not received
  * a Radio Measurement Element from the peer, then an error is returned.
  */
-INT wifi_getRMCapabilities(mac_address_t peer, UCHAR out_Capabilities[5]);
+INT wifi_getRMCapabilities(CHAR *peer, UCHAR out_Capabilities[5]);
 
 
 //Device.WiFi.AccessPoint.{i}.X_COMCAST-COM_InterworkingService.DGAFEnable	

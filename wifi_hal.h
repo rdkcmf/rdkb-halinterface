@@ -8123,7 +8123,8 @@ typedef struct {
  */
 typedef INT (*wifi_RMBeaconReport_callback)(UINT apIndex,
 													wifi_BeaconReport_t *out_struct,
-                                                    UCHAR out_DialogToken);
+													UINT	*out_array_size,
+                                                    UCHAR 	*out_DialogToken);
 
 /* @description Register a callback for a Beacon Request.  Called when a
  * response to a Beacon Request is received, or a Beacon Report is received

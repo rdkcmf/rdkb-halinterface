@@ -7896,8 +7896,8 @@ typedef INT (* wifi_BTMResponse_callback)(UINT apIndex,
  * @note This function must not suspend and must not invoke any blocking system
  * calls.
  */
-INT wifi_BTMQueryRequest_callback_register(
-                                            wifi_BTMQueryRequest_callback btmRequestCallback,
+INT wifi_BTMQueryRequest_callback_register(UINT apIndex,
+                                            wifi_BTMQueryRequest_callback btmQueryCallback,
                                             wifi_BTMResponse_callback btmResponseCallback);
 
 /*

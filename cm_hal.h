@@ -149,6 +149,10 @@
 #define  IP_ADDRESS_LENGTH                          IP_ADDRESS_SIZE
 #endif
 
+#ifndef DOCSIS_DEFAULT_MTU
+#define DOCSIS_DEFAULT_MTU                          1500
+#endif
+
 #ifndef ANSC_IPV4_ADDRESS
 /*
  * While we're trying really hard to smooth the procedure of switch-over from IPv4 to IPv4, there
@@ -1131,5 +1135,20 @@ INT docsis_GetUsOfdmaChanTable(PDOCSIF31_CM_US_OFDMA_CHAN *ppinfo, int *output_N
 */
 INT docsis_GetStatusOfdmaUsTable(PDOCSIF31_CMSTATUSOFDMA_US *ppinfo, int *output_NumberOfEntries);
 //<< Docsis3.1
+
+/*  docsis_GetMaxMTU : */
+/**
+*@description Get the maximum network interface MTU size supported by the DOCSIS maximum PDU size 
+* @param UINT *output_MaxMTU - maximum network interface MTU size supported
+* @return The status of the operation.
+* @retval RETURN_OK if successful.
+* @retval RETURN_ERR if any error is detected
+*
+* @execution Synchronous.
+* @sideeffect None.
+*
+*/
+INT docsis_GetMaxMTU(UINT *output_MaxMTU);
+
 #endif
  

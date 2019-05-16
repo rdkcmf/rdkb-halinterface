@@ -273,7 +273,7 @@ typedef  struct
 _CMMGMT_CM_DHCP_INFO
 {
     ANSC_IPV4_ADDRESS               IPAddress;
-    CHAR                            BootFileName[64];
+    CHAR                            BootFileName[256];
     ANSC_IPV4_ADDRESS               SubnetMask;
     ANSC_IPV4_ADDRESS               Gateway;
     ANSC_IPV4_ADDRESS               TFTPServer;
@@ -291,7 +291,7 @@ typedef  struct
 _CMMGMT_CM_IPV6DHCP_INFO
 {
     CHAR                            IPv6Address[40];
-    CHAR                            IPv6BootFileName[64];
+    CHAR                            IPv6BootFileName[256];
     CHAR                            IPv6Prefix[40];
     CHAR                            IPv6Router[40];
     CHAR                            IPv6TFTPServer[40];

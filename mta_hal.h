@@ -220,7 +220,7 @@ typedef  struct
 _MTAMGMT_MTA_DHCP_INFO
 {
     ANSC_IPV4_ADDRESS               IPAddress;
-    CHAR                            BootFileName[64];
+    CHAR                            BootFileName[256];
     CHAR                            FQDN[64];
     ANSC_IPV4_ADDRESS               SubnetMask;
     ANSC_IPV4_ADDRESS               Gateway;

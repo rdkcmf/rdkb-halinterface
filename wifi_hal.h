@@ -9362,5 +9362,14 @@ INT wifi_setZeroDFSState(UINT radioIndex, BOOL enable, BOOL precac);
 */
 INT wifi_getZeroDFSState(UINT radioIndex, BOOL *enable, BOOL *precac);
 
+/* GAS Configuration */ 
+typedef struct _wifi_GASConfiguration_t{   // Values correspond to the dot11GASAdvertisementEntry field definitions; see 802.11-2016 Annex C.3.
+    UINT AdvertisementID;
+    BOOL PauseForServerResponse;
+    UINT ResponseTimeout;
+    UINT ComeBackDelay;
+    UINT ResponseBufferingTime;
+    UINT QueryResponseLengthLimit;
+} wifi_GASConfiguration_t;
 
 #endif

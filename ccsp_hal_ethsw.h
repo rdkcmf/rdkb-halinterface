@@ -706,12 +706,6 @@ GWP_GetEthWanInterfaceName
 
 #define UP "up"
 #define DOWN "down"
-#ifdef _HUB4_PRODUCT_REQ_
-#define DISCONNECTED "disconnected"
-
-typedef INT (*ethsw_ethLinkEventCallback)(CHAR* ifname, CHAR* state);
-void CcspHalEthSw_RegisterLinkEventCallback(ethsw_ethLinkEventCallback callback_proc);
-#endif // _HUB4_PRODUCT_REQ_
 
 #endif /* __CCSP_HAL_ETHSW_H__ */
 

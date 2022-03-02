@@ -1018,17 +1018,22 @@ typedef  enum {
    TRAFFIC_CNT_STOP=2,
 } TRAFFIC_CNT_COMMAND;
 
-typedef struct DSCP_traffic_client {
-	char mac[18]; // e.g. 00:AA:BB:CC:DD:EE
-	UINT dscp;
-	ULONG rxBytes;
-	ULONG txBytes;
-} DSCP_traffic_client_t, *pDSCP_traffic_client_t;
+typedef struct Traffic_client {
+    char mac[18]; // e.g. 00:AA:BB:CC:DD:EE
+    ULONG rxBytes;
+    ULONG txBytes;
+} Traffic_client_t, *pTraffic_client_t;
 
-typedef struct DSCP_traffic_client_list {
-	UINT numElements;
-	pDSCP_traffic_client_t pClient;
-} DSCP_traffic_client_list_t, *pDSCP_traffic_client_list_t;
+typedef struct DSCP_Element {
+    UINT dscp_value;
+    UINT numClients;
+    Traffic_client_t Client[256];
+} DSCP_Element_t, *pDSCP_Element_t;
+
+typedef struct DSCP_list {
+    UINT numElements;
+    DSCP_Element_t DSCP_Element[64];
+} DSCP_list_t, *pDSCP_list_t;
 
 /* platform_hal_setDscp() */
 /**
@@ -1058,15 +1063,15 @@ INT platform_hal_resetDscpCounts(WAN_INTERFACE interfaceType);
 /* platform_hal_getDscpClientList() */
 /**
 * @description To get counter data 
-* e.g. DSCP_traffic_client_list_t ClientList;
-*      platform_hal_getDscpClientList(DOCSIS,&ClientList);
-*      ClientList should be filled by hal. pClient is the array of clients. Memory will be allocated by hal and freed by RDKB.
+* e.g. DSCP_list_t DSCP_List;
+*      platform_hal_getDscpClientList(DOCSIS,&DSCP_List);
+*      DSCP_List should be filled by hal.
 *
 * @param interfaceType - 1 for DOCSIS , 2 for EWAN
-* @param pClientList - List of client structure to be filled by hal
+* @param pDSCP_List - List of client structure to be filled by hal
 *
 */
-INT platform_hal_getDscpClientList(WAN_INTERFACE interfaceType , pDSCP_traffic_client_list_t pClientList);
+INT platform_hal_getDscpClientList(WAN_INTERFACE interfaceType , pDSCP_list_t pDSCP_List);
 
 
 #ifdef __cplusplus

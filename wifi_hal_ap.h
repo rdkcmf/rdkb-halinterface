@@ -2552,6 +2552,7 @@ typedef struct {
     UINT   wpsPushButton;
     char   beaconRateCtl[32];
     BOOL   network_initiated_greylist;
+    BOOL   mcast2ucast;                    /**< True if 'multicast to unicast' feature is enabled for this VAP, false otherwise */
 } __attribute__((packed)) wifi_front_haul_bss_t;
 
 #define WIFI_BRIDGE_NAME_LEN  32

@@ -110,6 +110,7 @@ enum BridgeOpr {
 typedef struct bridgeDetails {
 	char bridgeName[BRIDGE_NAME_SIZE];
 	char vlan_name[BRIDGE_NAME_SIZE];
+    	char VirtualParentIfname[BRIDGE_NAME_SIZE];
 	int  vlanID;
 	char ethIfList[IFLIST_SIZE];
 	char MoCAIfList[IFLIST_SIZE];

@@ -2551,6 +2551,7 @@ typedef struct {
     BOOL   bssHotspot;
     UINT   wpsPushButton;
     char   beaconRateCtl[32];
+    BOOL   network_initiated_greylist;
 } __attribute__((packed)) wifi_front_haul_bss_t;
 
 #define WIFI_BRIDGE_NAME_LEN  32

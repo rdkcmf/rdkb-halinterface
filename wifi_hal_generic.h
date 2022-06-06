@@ -16,6 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+
+/**********************************************************************
+    Notes:
+
+    What is new for 3.0.1
+
+      1. Added cli_activeNumSpatialStreams field to wifi_associated_dev3_t structure
+         in wifi_hal_generic.h file
+      2. Added cli_CapableNumSpatialStreams field to wifi_associated_dev_t structure
+         in wifi_hal_ap.h file
+
+**********************************************************************/
+
 #ifndef __WIFI_HAL_GENERIC_H__
 #define __WIFI_HAL_GENERIC_H__
 
@@ -145,10 +158,10 @@ extern "C"{
 #define RESTORE_CNFG_FILE_NAME  "/data/.nvram_restore_cfg.txt"
 #define NVRAM_LINE_MAX       (1024)
 
-//defines for HAL version 3.0.0
+//defines for HAL version 3.0.1
 #define WIFI_HAL_MAJOR_VERSION 3        /**< This is the major verion of this HAL. */
 #define WIFI_HAL_MINOR_VERSION 0        /**< This is the minor verson of the HAL. */
-#define WIFI_HAL_MAINTENANCE_VERSION 0  /**< This is the maintenance version of the HAL. */
+#define WIFI_HAL_MAINTENANCE_VERSION 1  /**< This is the maintenance version of the HAL. */
 #define WIFI_HAL_VERSION (WIFI_HAL_MAJOR_VERSION *1000+ WIFI_HAL_MINOR_VERSION *10+ WIFI_HAL_MAINTENANCE_VERSION)
 
 #define MAX_NUM_TWT_SESSION  50    /**< Maximum number of TWT sessions for an AP (TODO to be defined) */

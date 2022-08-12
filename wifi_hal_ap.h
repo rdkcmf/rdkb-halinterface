@@ -1910,6 +1910,8 @@ typedef INT (* wifi_receivedDataFrame_callback)(INT apIndex, mac_address_t sta_m
 typedef INT (* wifi_receivedMgmtFrame_callback)(INT apIndex, UCHAR *sta_mac, UCHAR *frame, UINT len, wifi_mgmtFrameType_t type, wifi_direction_t dir);
 typedef INT (* wifi_receivedDataFrame_callback)(INT apIndex, UCHAR *sta_mac, UCHAR *frame, UINT len, wifi_dataFrameType_t type, wifi_direction_t dir);
 #endif
+
+typedef INT(* wifi_csi_callback)(mac_address_t mac_addr, wifi_csi_data_t  *csi_data);
 /** @} */  //END OF GROUP WIFI_HAL_TYPES
 
 /**
@@ -1918,6 +1920,25 @@ typedef INT (* wifi_receivedDataFrame_callback)(INT apIndex, UCHAR *sta_mac, UCH
  */
 
 INT wifi_mgmt_frame_callbacks_register(wifi_receivedMgmtFrame_callback mgmtRxCallback);
+
+
+
+/* wifi_csi_callback_register() function */
+/**
+* @brief CSI call back registration function. Callback will be executed when
+* the CSI data is available from the HAL. if CSI engine is disabled, this
+* callback should not be executed.
+*
+* @param[in] callback    wifi_csi_callback callback function
+*
+* @execution Synchronous
+* @sideeffect None
+*
+* @note This function must not suspend and must not invoke any blocking system
+* calls. It should probably just send a message to a driver event handler task.
+*
+*/
+void wifi_csi_callback_register(wifi_csi_callback callback_proc);
 
 
 /* wifi_enableCSIEngine() function */
@@ -2655,7 +2676,6 @@ typedef INT(* wifi_vapstatus_callback)(INT apIndex, wifi_vapstatus_t status);
 *
 */
 INT wifi_vapstatus_callback_register(wifi_vapstatus_callback callback);
-
 
 /** @} */  //END OF GROUP WIFI_HAL_APIS
 

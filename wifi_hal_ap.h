@@ -1893,7 +1893,18 @@ typedef enum
     WIFI_FRAME_TYPE_CTRL,
     WIFI_FRAME_TYPE_DATA,
 } wifi_frameType_t;
-  
+
+typedef struct {
+    INT ap_index;
+    mac_address_t sta_mac;
+    wifi_mgmtFrameType_t type;
+    wifi_direction_t dir;
+    INT     sig_dbm;
+    UCHAR   token;
+    UINT    len;
+    UCHAR   *data;
+} __attribute__((packed)) wifi_frame_t;
+
 typedef void (* wifi_received8021xFrame_callback)(unsigned int ap_index, mac_address_t sta, wifi_eapol_type_t type, void *data, unsigned int len);
 typedef void (* wifi_sent8021xFrame_callback)(unsigned int ap_index, mac_address_t sta, wifi_eapol_type_t type, void *data, unsigned int len);
 
@@ -1904,7 +1915,7 @@ typedef void (* wifi_receivedAssocReqFrame_callback)(unsigned int ap_index, mac_
 typedef void (* wifi_sentAssocRspFrame_callback)(unsigned int ap_index, mac_address_t sta, void *data, unsigned int len);
 
 #ifdef WIFI_HAL_VERSION_3_PHASE2
-typedef INT (* wifi_receivedMgmtFrame_callback)(INT apIndex, mac_address_t sta_mac, UCHAR *frame, UINT len, wifi_mgmtFrameType_t type, wifi_direction_t dir);
+typedef INT (* wifi_receivedMgmtFrame_callback)(INT apIndex, wifi_frame_t *frame);
 typedef INT (* wifi_receivedDataFrame_callback)(INT apIndex, mac_address_t sta_mac, UCHAR *frame, UINT len, wifi_dataFrameType_t type, wifi_direction_t dir);
 #else
 typedef INT (* wifi_receivedMgmtFrame_callback)(INT apIndex, UCHAR *sta_mac, UCHAR *frame, UINT len, wifi_mgmtFrameType_t type, wifi_direction_t dir);

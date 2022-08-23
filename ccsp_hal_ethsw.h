@@ -96,6 +96,10 @@
 #define ULONG unsigned long
 #endif
 
+#ifndef ULLONG
+#define ULLONG unsigned long long
+#endif
+
 #ifndef CHAR
 #define CHAR  char
 #endif
@@ -244,8 +248,8 @@ CCSP_HAL_ETHSW_ADMIN_STATUS, *PCCSP_HAL_ETHSW_ADMIN_STATUS;
 typedef  struct
 _CCSP_HAL_ETH_STATS
 {
-    ULONG                           BytesSent;
-    ULONG                           BytesReceived;
+    ULLONG                          BytesSent;
+    ULLONG                          BytesReceived;
     ULONG                           PacketsSent;
     ULONG                           PacketsReceived;
     ULONG                           ErrorsSent;

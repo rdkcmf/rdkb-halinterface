@@ -1074,6 +1074,21 @@ INT platform_hal_resetDscpCounts(WAN_INTERFACE interfaceType);
 INT platform_hal_getDscpClientList(WAN_INTERFACE interfaceType , pDSCP_list_t pDSCP_List);
 
 
+/* INT platform_hal_GetCPUSpeed() function */
+/**
+* @description get cpu speed.
+*
+* @param cpuSpeed - store cpu speed 
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @sideeffect None
+*/
+INT platform_hal_GetCPUSpeed(char *cpuSpeed);
+
+
 #ifdef __cplusplus
 }
 #endif

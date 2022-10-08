@@ -855,6 +855,105 @@ BOOLEAN platform_hal_getFanStatus(UINT fanIndex);
 */
 INT platform_hal_setFanMaxOverride(BOOLEAN bOverrideFlag, UINT fanIndex);
 
+#ifdef FEATURE_RDKB_THERMAL_MANAGER
+typedef enum {
+   FAN_SPEED_OFF=0,
+   FAN_SPEED_SLOW=1,
+   FAN_SPEED_MEDIUM=2,
+   FAN_SPEED_FAST=3,
+   FAN_SPEED_MAX=4
+} FAN_SPEED; // Fan speed
+
+
+
+typedef struct _FAN_PLATFORM_CONFIG
+{
+   UINT FanCount;
+   UINT SlowSpeedThresh;
+   UINT MediumSpeedThresh;
+   UINT FastSpeedThresh;
+   UINT FanMinRunTime;
+   UINT MonitoringDelay;
+   UINT PowerMonitoring;
+} THERMAL_PLATFORM_CONFIG;
+
+
+
+/* platform_hal_initThermal() function */
+/**
+* @description initialise Thermal Hal
+*
+* @param pThermalPlatformConfig - Pointer to platforms thermal configuration
+*
+* @return RETURN_OK on successful initialisation
+*/
+INT platform_hal_initThermal(THERMAL_PLATFORM_CONFIG* pThermalPlatformConfig);
+
+/* platform_hal_LoadThermalConfig() function */
+/**
+* @description Loas default Thermal Hal thresholds
+*
+* @param pThermalPlatformConfig - Pointer to platforms thermal configuration
+*
+* @return RETURN_OK on successful initialisation
+*/
+INT platform_hal_LoadThermalConfig (THERMAL_PLATFORM_CONFIG* pThermalPlatformConfig);
+
+typedef enum {
+   FAN_ERR_NONE = 0,
+   FAN_ERR_HW = 1,
+   FAN_ERR_MAX_OVERRIDE_SET = 2
+} FAN_ERR; // Fan errors
+
+
+
+/* platform_hal_setFanSpeed() function */
+/**
+* @description Set the fan speed
+*
+* @param fanIndex - fan index
+* @param fanSpeed - Off, Slow, medium or fast
+* @param pErrReason - Pointer where to provide error status
+*
+* @return RETURN_OK on success setting fan speed
+*/
+INT platform_hal_setFanSpeed(UINT fanIndex, FAN_SPEED fanSpeed, FAN_ERR* pErrReason);
+
+
+
+/* platform_hal_getFanTemperature() function */
+/**
+* @description Get current device temperature reading
+*
+* @param pTemp - Pointer where to provide temperature reading
+*
+* @return RETURN_OK on success reading temperature
+*/
+INT platform_hal_getFanTemperature(int* pTemp);
+
+
+/* platform_hal_getInputCurrent() */
+/**
+* @description To get input current
+*
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*/
+
+INT platform_hal_getInputCurrent(INT *pValue);
+
+/* platform_hal_getInputPower() */
+/**
+* @description To get input power
+*
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*/
+
+INT platform_hal_getInputPower(INT *pValue);
+
+#endif
+
 /* platform_hal_SetSNMPOnboardRebootEnable() function */
 /**
 * @description Set SNMP Onboard Reboot Enable value 

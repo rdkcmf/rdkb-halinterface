@@ -682,10 +682,16 @@ typedef struct {
     wifi_interface_name_t  interface_name;
     wifi_interface_name_t  bridge_name;
     int              vlan_id;
-    BOOL             primary;
     unsigned int     index;
     wifi_vap_name_t  vap_name;
 }__attribute__((packed)) wifi_interface_name_idex_map_t;
+
+typedef struct {
+    unsigned int phy_index;
+    unsigned int radio_index;
+    char radio_name[16];
+    wifi_interface_name_t interface_name;
+}__attribute__((packed)) radio_interface_mapping_t;
 
 /**
  * @brief Wifi Plataform Property
@@ -694,6 +700,7 @@ typedef struct {
      UINT numRadios;                               /**< Number of radios. */
      wifi_radio_capabilities_t radiocap[MAX_NUM_RADIOS]; /**< Radio capabilities */
      wifi_interface_name_idex_map_t interface_map[(MAX_NUM_RADIOS * MAX_NUM_VAP_PER_RADIO)];
+     radio_interface_mapping_t radio_interface_map[MAX_NUM_RADIOS];
 }__attribute__((packed)) wifi_platform_property_t;
 
 /**

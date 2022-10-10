@@ -3370,19 +3370,6 @@ INT wifi_dppRemoveSTAPassphrase(UINT apIndex,
                                 CHAR *sta);
 
 
-typedef enum {
-    CHAN_STATE_AVAILABLE = 1,
-    CHAN_STATE_DFS_NOP_FINISHED,
-    CHAN_STATE_DFS_NOP_START,
-    CHAN_STATE_DFS_CAC_START,
-    CHAN_STATE_DFS_CAC_COMPLETED
-} wifi_channelState_t;
-
-typedef struct _wifi_channelMap_t {
-    INT ch_number;
-    wifi_channelState_t ch_state;
-} wifi_channelMap_t;
-
 /* wifi_getRadioChannels() function */
 /*
  * Description: This function returns a map of current states of each possible channel for given radio.

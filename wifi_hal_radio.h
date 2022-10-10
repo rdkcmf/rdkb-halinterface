@@ -41,6 +41,28 @@ typedef enum {
 
 #define MAXNUMSECONDARYCHANNELS     7
 
+typedef enum {
+    WIFI_EVENT_RADAR_DETECTED,
+    WIFI_EVENT_RADAR_CAC_FINISHED,
+    WIFI_EVENT_RADAR_CAC_ABORTED,
+    WIFI_EVENT_RADAR_NOP_FINISHED,
+    WIFI_EVENT_RADAR_PRE_CAC_EXPIRED,
+    WIFI_EVENT_RADAR_CAC_STARTED
+} wifi_radar_eventType_t;
+
+typedef enum {
+    CHAN_STATE_AVAILABLE = 1,
+    CHAN_STATE_DFS_NOP_FINISHED,
+    CHAN_STATE_DFS_NOP_START,
+    CHAN_STATE_DFS_CAC_START,
+    CHAN_STATE_DFS_CAC_COMPLETED
+} wifi_channelState_t;
+
+typedef struct _wifi_channelMap_t {
+    INT ch_number;
+    wifi_channelState_t ch_state;
+} wifi_channelMap_t;
+
 /**
  * @brief Wifi Radio Operation Parameters
  */
@@ -57,6 +79,7 @@ typedef struct {
     UINT csa_beacon_count;                              /**< Specifies how long CSA need to be announced. */
     wifi_countrycode_type_t countryCode;                /**< The country code. */
     wifi_operating_env_t operatingEnvironment;           /**< The wifi Operating environment */
+    wifi_channelMap_t channel_map[64];
     BOOL DCSEnabled;                                    /**< set DCSEnabled to TRUE to enable DCS. */
     UINT dtimPeriod;                                    /**< The DTIM period. */
     UINT beaconInterval;                                /**< The beacon interval. */
@@ -78,6 +101,8 @@ typedef struct {
     UINT adminControl;
     UINT chanUtilThreshold;
     BOOL chanUtilSelfHealEnable;
+    BOOL DfsEnabled;
+    BOOL DfsEnabledBootup;
 } __attribute__((packed)) wifi_radio_operationParam_t;
 
 
@@ -318,6 +343,46 @@ INT wifi_getRadioDfsEnable(INT radioIndex, BOOL *output_bool);
 *
 */
 INT wifi_setRadioDfsEnable(INT radioIndex, BOOL enabled);
+
+/* wifi_getRadioDfsAtBootUpEnable() function */
+/**
+* @brief Get the Dfs enable on Bootup status.
+*
+* @param[in] radioIndex  Index of Wi-Fi radio channel
+* @param[out] enable      Get DFS Enable on bootup status of the selected radio channel
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @execution Synchronous
+* @sideeffect None
+*
+* @note This function must not suspend and must not invoke any blocking system
+* calls. It should probably just send a message to a driver event handler task.
+*
+*/
+INT wifi_getRadioDfsAtBootUpEnable(INT radioIndex, BOOL *enable);
+
+/* wifi_setRadioDfsAtBootUpEnable() function */
+/**
+* @brief Set the Dfs enable on Bootup status.
+*
+* @param[in] radioIndex  Index of Wi-Fi radio channel
+* @param[in] enable      Set DFS Enable on Bootup status of the selected radio channel
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @execution Synchronous
+* @sideeffect None
+*
+* @note This function must not suspend and must not invoke any blocking system
+* calls. It should probably just send a message to a driver event handler task.
+*
+*/
+INT wifi_setRadioDfsAtBootUpEnable(INT radioIndex, BOOL enable);
 
 /* wifi_getRadioMCS() function */
 /**

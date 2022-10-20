@@ -952,6 +952,16 @@ INT platform_hal_getInputCurrent(INT *pValue);
 
 INT platform_hal_getInputPower(INT *pValue);
 
+/* platform_hal_getRadioTemperature() */
+/**
+* @description To get Radio Temperature
+*
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*/
+
+INT platform_hal_getRadioTemperature(INT radioIndex, INT* pValue);
+
 #endif
 
 /* platform_hal_SetSNMPOnboardRebootEnable() function */

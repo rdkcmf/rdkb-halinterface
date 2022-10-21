@@ -2688,6 +2688,44 @@ typedef INT(* wifi_vapstatus_callback)(INT apIndex, wifi_vapstatus_t status);
 */
 INT wifi_vapstatus_callback_register(wifi_vapstatus_callback callback);
 
+/* wifi_analytics_callback() function */
+/**
+* @brief This call back will be invoked when HAL wants to log catasrophic failures
+*
+* @param[in] fmt        format
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @execution Synchronous
+* @sideeffect None
+*
+* @note This function must not suspend and must not invoke any blocking system
+* calls. It should probably just send a message to a driver event handler task.
+*
+*/
+typedef INT(* wifi_analytics_callback)(CHAR *fmt, ...);
+
+/* wifi_analytics_callback_register() function */
+/**
+* @brief VAP Status call back registration function.
+*
+* @param[in] callback    wifi_analytics_callback callback function
+*
+* @return The status of the operation
+* @retval RETURN_OK if successful
+* @retval RETURN_ERR if any error is detected
+*
+* @execution Synchronous
+* @sideeffect None
+*
+* @note This function must not suspend and must not invoke any blocking system
+* calls. It should probably just send a message to a driver event handler task.
+*
+*/
+INT wifi_hal_analytics_callback_register(wifi_analytics_callback callback);
+
 /** @} */  //END OF GROUP WIFI_HAL_APIS
 
 #ifdef __cplusplus

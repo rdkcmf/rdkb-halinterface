@@ -630,6 +630,14 @@ typedef enum {
     wifi_countrycode_max /**< Max number of country code */
 } wifi_countrycode_type_t;
 
+typedef enum {
+    wifi_operating_env_all,
+    wifi_operating_env_indoor,
+    wifi_operating_env_outdoor,
+    wifi_operating_env_non_country
+} wifi_operating_env_t;
+
+
 /**
  * @brief Wifi Radio CSI capabilities
  */

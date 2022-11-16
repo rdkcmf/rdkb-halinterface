@@ -314,6 +314,7 @@ typedef struct {
     UINT                            isRRMSupported; /**< Client supports RRM                    */
     BOOL                            bandCap2G;      /**< Client is 2.4GHz capable               */
     BOOL                            bandCap5G;      /**< Client is 5GHz capable                 */
+    BOOL                            bandCap6G;      /**< Client is 6GHz capable                 */
     wifi_steering_datarateInfo_t    datarateInfo;   /**< Client supported datarate information  */
     wifi_steering_rrmCaps_t         rrmCaps;        /**< Client supported RRM capabilites       */
 } wifi_steering_evConnect_t;

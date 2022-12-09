@@ -17,6 +17,25 @@
  * limitations under the License.
 */
 
+/**
+* @file fwupgrade_hal.h
+* @brief For CCSP Component: FW Upgrade HAL Layer
+*
+*/
+
+/**
+ * @defgroup FWUPGRADE_HAL FWUPGRADE HAL
+ *
+ * This module provides the function call prototypes used for the FW Upgrade abstraction layer..
+ *
+ * @defgroup FWUPGRADE_HAL_TYPES   FWUPGRADE HAL Data Types
+ * @ingroup  FWUPGRADE_HAL
+ * 
+ * @defgroup FWUPGRADE_HAL_APIS   FWUPGRADE HAL APIs
+ * @ingroup  FWUPGRADE_HAL
+ *
+ **/
+
 #ifndef __FWUPGRADE_HAL_H__
 #define __FWUPGRADE_HAL_H__
 
@@ -25,6 +44,11 @@
 /**********************************************************************
                CONSTANT DEFINITIONS
 **********************************************************************/
+
+/**
+* @addtogroup FWUPGRADE_HAL_TYPES
+* @{
+*/
 
 #ifdef __cplusplus
 extern "C"{
@@ -87,7 +111,14 @@ extern "C"{
 #define RETURN_ERR   -1
 #endif
 
+/** @} */  //END OF GROUP FWUPGRADE_HAL_TYPES
+
 /* FW Download HAL API Prototype */
+
+/**
+ * @addtogroup FWUPGRADE_HAL_APIS
+ * @{
+ */
 
 /* fwupgrade_hal_set_download_url  - 1 */
 
@@ -216,6 +247,6 @@ INT fwupgrade_hal_download_install(const char *url);
 #ifdef __cplusplus
 }
 #endif
-
+/** @} */  //END OF GROUP FWUPGRADE_HAL_APIS
 #endif //__FWUPGRADE_HAL_H__
 

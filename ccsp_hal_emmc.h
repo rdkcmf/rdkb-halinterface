@@ -17,11 +17,34 @@
  * limitations under the License.
 */
 
+/**
+* @file ccsp_hal_emmc.h
+* @brief For CCSP Component: EMMC Status HAL Layer
+*
+*/
+
+/**
+ * @defgroup EMMC_HAL EMMC HAL
+ *
+ * EMMC HAL is used for the RDK-B EMMC Status abstraction layer.
+ *
+ * @defgroup EMMC_HAL_TYPES  EMMC HAL Data Types
+ * @ingroup  EMMC_HAL
+ *
+ * @defgroup EMMC_HAL_APIS   EMMC HAL APIs
+ * @ingroup  EMMC_HAL
+ *
+ **/
 
 #ifndef __CCSP_HAL_EMMC_H__
 #define __CCSP_HAL_EMMC_H__
 
 #include <stdbool.h>
+
+/**
+ * @addtogroup EMMC_HAL_TYPES
+ * @{
+ */
 
 /* Defines */
 #define RDK_STMGR_MAX_DEVICES                        10
@@ -32,6 +55,11 @@
 #define RDK_STMGR_MAX_DIAGNOSTIC_ATTRIBUTES          20	/*!< Max Number of SMART diagnostics attributes. */
 
 /* Structs & Enums */
+/**
+ * @enum eSTMGRReturns
+ * 
+ * @brief List of ReturnCodes for EMMC API's Fetch Operation.
+ */
 typedef enum _stmgr_ReturnCode {
     RDK_STMGR_RETURN_SUCCESS = 0,
     RDK_STMGR_RETURN_GENERIC_FAILURE = -1,
@@ -40,6 +68,11 @@ typedef enum _stmgr_ReturnCode {
     RDK_STMGR_RETURN_UNKNOWN_FAILURE = -4
 } eSTMGRReturns;
 
+/**
+ * @enum eSTMGRDeviceType
+ * 
+ * @brief List of DeviceTypes supported.
+ */
 typedef enum _stmgr_DeviceType {
     RDK_STMGR_DEVICE_TYPE_HDD   = 0,
     RDK_STMGR_DEVICE_TYPE_SDCARD,
@@ -50,6 +83,11 @@ typedef enum _stmgr_DeviceType {
     RDK_STMGR_DEVICE_TYPE_MAX
 } eSTMGRDeviceType;
 
+/**
+ * @enum eSTMGRDeviceStatus
+ * 
+ * @brief DeviceStatus List.
+ */
 typedef enum _stmgr_DeviceStatus {
     RDK_STMGR_DEVICE_STATUS_OK              = 0,
     RDK_STMGR_DEVICE_STATUS_READ_ONLY       = (1 << 0),
@@ -61,6 +99,11 @@ typedef enum _stmgr_DeviceStatus {
     RDK_STMGR_DEVICE_STATUS_UNKNOWN         = (1 << 6)
 } eSTMGRDeviceStatus;
 
+/**
+ * @enum eSTMGREvents
+ * 
+ * @brief Event Types List.
+ */
 typedef enum _stmgr_events {
     RDK_STMGR_EVENT_STATUS_CHANGED = 100,
     RDK_STMGR_EVENT_HEALTH_WARNING,
@@ -143,11 +186,47 @@ typedef struct _stmgr_CallBackData{
    char mountPath[200];
 }eSTMGRCallBackData;
 
+/** @} */  //END OF GROUP EMMC_HAL_TYPES
+
 //typedef void (*fnSTMGR_EventCallback)(eSTMGREventMessage*);
 
 // HAL Functions
 
+/**
+ * @addtogroup EMMC_HAL_APIS
+ * @{
+ */
+
+/* CcspHalEmmcGetHealthInfo() function */
+/**
+* @description Provides EMMC health information
+* @param
+*    pHealthInfo - Pointer to Health Info structure that needs to be updated.
+* @return The status of the operation.
+* @retval RDK_STMGR_RETURN_SUCCESS Success.
+* @retval RDK_STMGR_RETURN_GENERIC_FAILURE Generic Failure.
+* @retval RDK_STMGR_RETURN_INIT_FAILURE Initialization failure.
+* @retval RDK_STMGR_RETURN_INVALID_INPUT Invalid Input.
+* @retval RDK_STMGR_RETURN_UNKNOWN_FAILURE Unknown Failure.
+* 
+*/
 eSTMGRReturns CcspHalEmmcGetHealthInfo (eSTMGRHealthInfo* pHealthInfo);
+
+/* CcspHalEmmcGetDeviceInfo() function */
+/**
+* @description Provides EMMC Device information
+* @param
+*    pHealthInfo - Pointer to Device Info structure that needs to be updated.
+* @return The status of the operation.
+* @retval RDK_STMGR_RETURN_SUCCESS Success.
+* @retval RDK_STMGR_RETURN_GENERIC_FAILURE Generic Failure.
+* @retval RDK_STMGR_RETURN_INIT_FAILURE Initialization failure.
+* @retval RDK_STMGR_RETURN_INVALID_INPUT Invalid Input.
+* @retval RDK_STMGR_RETURN_UNKNOWN_FAILURE Unknown Failure.
+* 
+*/
 eSTMGRReturns CcspHalEmmcGetDeviceInfo (eSTMGRDeviceInfo* pDeviceInfo);
+
+/** @} */  //END OF GROUP EMMC_HAL_APIS
 
 #endif /* __CCSP_HAL_EMMC_H__ */

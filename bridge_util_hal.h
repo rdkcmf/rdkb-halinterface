@@ -17,6 +17,24 @@
  * limitations under the License.
 */
 
+/**
+* @file bridge_util_hal.h
+* @brief For Bridge Util Component: Bridge Utils OEM Layer
+*
+*/
+
+/**
+ * @defgroup BRIDGE_UTIL_OEM BRIDGE UTIL OEM
+ *
+ * BRIDGE UTIL OEM is used for the RDK-B Bridge Util OEM abstraction layer.
+ *
+ * @defgroup BRIDGE_UTIL_OEM_DATA_TYPES BRIDGE UTIL OEM Data Types
+ * @ingroup  BRIDGE_UTIL_OEM
+ *
+ * @defgroup BRIDGE_UTIL_OEM_APIS BRIDGE UTIL OEM APIs
+ * @ingroup  BRIDGE_UTIL_OEM
+ *
+ **/
 
 #ifndef  _BRIDGE_UTIL_OEM_H
 #define  _BRIDGE_UTIL_OEM_H
@@ -30,6 +48,11 @@
 #include <pthread.h>
 
 #include "OvsAgentApi.h"
+
+/**
+ * @addtogroup BRIDGE_UTIL_OEM_DATA_TYPES
+ * @{
+ */
 
 #define BRIDGE_UTIL_LOG_FNAME "/rdklogs/logs/bridgeUtils.log"
 
@@ -76,6 +99,11 @@ extern time_t utc_time;
                                     		fflush(logFp);}\
                                  	}
 
+/**
+ * @enum Config
+ *
+ * @brief List of Configurations for BridgeUtils API's.
+ */
 enum Config {
 	PRIVATE_LAN = 1,
 	HOME_SECURITY = 2,
@@ -92,6 +120,11 @@ enum Config {
 	MESH_WIFI_BACKHAUL_5G = 14
 };
 
+/**
+ * @enum INTERFACE_TYPE
+ *
+ * @brief List of Interface types for BridgeUtils API's.
+ */
 enum INTERFACE_TYPE {
     IF_BRIDGE_BRIDGEUTIL = 1,
     IF_VLAN_BRIDGEUTIL = 2,
@@ -102,6 +135,11 @@ enum INTERFACE_TYPE {
     IF_OTHER_BRIDGEUTIL
 };
 
+/**
+ * @enum BridgeOpr
+ *
+ * @brief BridgeUtils Operations for BridgeUtils API's.
+ */
 enum BridgeOpr {
 	DELETE_BRIDGE = 0,
 	CREATE_BRIDGE = 1
@@ -118,56 +156,89 @@ typedef struct bridgeDetails {
 	char WiFiIfList[IFLIST_SIZE];
 }bridgeDetails;
 
+/** @} */  //END OF GROUP BRIDGE_UTIL_OEM_DATA_TYPES
+
+/**
+ * @addtogroup BRIDGE_UTIL_OEM_APIS
+ * @{
+ */
+
+/* updateBridgeInfo() function */
+/**
+* @brief Provides generic changes which needs to be configured after creating/updating/deleting bridge.
+* @param bridgeDetails *bridgeInfo - Pointer to Bridge information structure.
+* @param char* ifNameToBeUpdated - Interface to be deleted and updated, applicable only during sync.
+* @param int Opr - Information about operations whether the request creating/updating/deleting bridge.
+* @param int type - Interface type, in case of sync delete value is set to unknown/other.
+* @return The status of the operation.
+* @retval 0 on success or a negative error code.
+*
+*/
 extern int updateBridgeInfo(bridgeDetails *bridgeInfo, char* ifNameToBeUpdated, int Opr , int type);
 
+/* checkIfExists() function */
+/**
+* @brief Check if interface is created.
+* @param char* iface_name - Interface name.
+* @return The status of the operation.
+* @retval 0 on success or a negative error code.
+*
+*/
 extern int checkIfExists(char* iface_name);
+
+/* removeIfaceFromList() function */
+/**
+* @brief Remove interface from the list of interfaces.
+* @param char *str - Interface which needs to be removed from list.
+* @param const char *sub - List of interfaces name.
+* @return The status of the operation.
+* @retval void
+*
+*/
 extern void removeIfaceFromList(char *str, const char *sub);
+
+/* checkIfExistsInBridge() function */
+/**
+* @brief Check if interface is attached to bridge.
+* @param char* iface_name - Interface name.
+* @param char *bridge_name - Bridge name.
+* @return The status of the operation.
+* @retval 0 on success or a negative error code.
+*
+*/
 extern int checkIfExistsInBridge(char* iface_name, char *bridge_name);
 
-/*********************************************************************************************
-
-    caller:  CreateBrInterface,DeleteBrInterface,SyncBrInterfaces
-    prototype:
-
-        int
-        HandlePreConfigVendor
-           (
-		bridgeDetails *bridgeInfo,
-		int InstanceNumber
-	   );
-    description :
-		This function has OEM/SOC specific changes which needs to be configured before
-		creating/updating/deleting bridge.
-
-	Argument :
-		bridgeDetails *bridgeInfo,   -- Bridge info
-		int InstanceNumber 			-- Instance number
-	return : When success returns 0
-***********************************************************************************************/
+/* HandlePreConfigVendor() function */
+/**
+* @brief Provides OEM/SOC specific changes which needs to be configured before creating/updating/deleting bridge.
+* @param bridgeDetails *bridgeInfo - Pointer to Bridge info structure.
+* @param int InstanceNumber - Instance number for configuration.
+* @return The status of the operation.
+* @retval 0 on success or a negative error code.
+*
+*/
 int HandlePreConfigVendor(bridgeDetails *bridgeInfo,int Config);
 
-/*********************************************************************************************
-
-    caller:  CreateBrInterface,DeleteBrInterface,SyncBrInterfaces
-    prototype:
-
-        int
-        HandlePostConfigVendor
-            (
-		bridgeDetails *bridgeInfo,
-		int InstanceNumber
-	    );
-    description :
-		This function has OEM/SOC specific changes which needs to be configured after
-		creating/updating/deleting bridge
-
-	Argument :
-		bridgeDetails *bridgeInfo,   -- Bridge info
-		int InstanceNumber 	-- Instance number
-	return : When success returns 0
-***********************************************************************************************/
+/* HandlePostConfigVendor() function */
+/**
+* @brief Provides OEM/SOC specific changes which needs to be configured after creating/updating/deleting bridge.
+* @param bridgeDetails *bridgeInfo - Pointer to Bridge info structure.
+* @param int InstanceNumber - Instance number for configuration.
+* @return The status of the operation.
+* @retval 0 on success or a negative error code.
+*
+*/
 int HandlePostConfigVendor(bridgeDetails *bridgeInfo,int Config);
 
+/* getVendorIfaces() function */
+/**
+* @brief Provides vendor interface information for creating/updating/deleting bridge.
+* @param <None>
+* @return The status of the operation.
+* @retval vendor interface or NULL.
+*
+*/
 char *getVendorIfaces();
 
+/** @} */  //END OF BRIDGE_UTIL_OEM_APIS
 #endif
